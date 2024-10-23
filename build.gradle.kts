@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   alias(libs.plugins.kotlinAndroid) apply false
+  alias(libs.plugins.kotlinCompose) apply false
   alias(libs.plugins.androidLibrary) apply false
 
   alias(libs.plugins.spotless)
