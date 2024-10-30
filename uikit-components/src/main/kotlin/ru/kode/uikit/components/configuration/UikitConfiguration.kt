@@ -6,6 +6,7 @@ import ru.kode.uikit.components.ButtonColors
 import ru.kode.uikit.components.ButtonConfiguration
 import ru.kode.uikit.components.CheckboxConfiguration
 import ru.kode.uikit.components.RadioButtonConfiguration
+import ru.kode.uikit.components.TextFieldConfiguration
 import ru.kode.uikit.components.bottomsheet.BottomSheetConfiguration
 
 @Immutable
@@ -14,7 +15,8 @@ data class UikitConfiguration(
   val radioButton: RadioButtonConfiguration,
   val buttonConfigurations: List<ButtonConfiguration>,
   val buttonColors: List<ButtonColors>,
-  val bottomSheetConfiguration: BottomSheetConfiguration
+  val bottomSheetConfiguration: BottomSheetConfiguration,
+  val textFieldConfiguration: TextFieldConfiguration,
 )
 
 val LocalUikitConfiguration = staticCompositionLocalOf<UikitConfiguration> {
