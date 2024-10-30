@@ -17,6 +17,7 @@ data class UikitConfiguration(
   val buttonColors: List<ButtonColors>,
   val bottomSheetConfiguration: BottomSheetConfiguration,
   val textFieldConfiguration: TextFieldConfiguration,
+  val textFieldAreaConfiguration: TextFieldConfiguration,
 )
 
 val LocalUikitConfiguration = staticCompositionLocalOf<UikitConfiguration> {
