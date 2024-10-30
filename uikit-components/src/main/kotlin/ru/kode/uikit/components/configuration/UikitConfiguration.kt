@@ -6,6 +6,7 @@ import ru.kode.uikit.components.BottomSheetConfiguration
 import ru.kode.uikit.components.ButtonColors
 import ru.kode.uikit.components.ButtonConfiguration
 import ru.kode.uikit.components.CheckboxConfiguration
+import ru.kode.uikit.components.PageIndicatorConfiguration
 import ru.kode.uikit.components.RadioButtonConfiguration
 import ru.kode.uikit.components.TextFieldAreaConfiguration
 import ru.kode.uikit.components.TextFieldConfiguration
@@ -19,6 +20,7 @@ data class UikitConfiguration(
   val bottomSheetConfiguration: BottomSheetConfiguration,
   val textFieldConfiguration: TextFieldConfiguration,
   val textFieldAreaConfiguration: TextFieldAreaConfiguration,
+  val pageIndicatorConfiguration: PageIndicatorConfiguration,
 )
 
 val LocalUikitConfiguration = staticCompositionLocalOf<UikitConfiguration> {
