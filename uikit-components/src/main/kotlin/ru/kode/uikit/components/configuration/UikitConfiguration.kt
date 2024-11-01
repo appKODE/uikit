@@ -8,6 +8,7 @@ import ru.kode.uikit.components.ButtonConfiguration
 import ru.kode.uikit.components.CheckboxConfiguration
 import ru.kode.uikit.components.PageIndicatorConfiguration
 import ru.kode.uikit.components.RadioButtonConfiguration
+import ru.kode.uikit.components.SliderConfiguration
 import ru.kode.uikit.components.TextFieldAreaConfiguration
 import ru.kode.uikit.components.TextFieldConfiguration
 
@@ -21,6 +22,7 @@ data class UikitConfiguration(
   val textFieldConfiguration: TextFieldConfiguration,
   val textFieldAreaConfiguration: TextFieldAreaConfiguration,
   val pageIndicatorConfiguration: PageIndicatorConfiguration,
+  val sliderConfiguration: SliderConfiguration,
 )
 
 val LocalUikitConfiguration = staticCompositionLocalOf<UikitConfiguration> {
