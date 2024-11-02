@@ -11,6 +11,7 @@ import ru.kode.uikit.components.RadioButtonConfiguration
 import ru.kode.uikit.components.SliderConfiguration
 import ru.kode.uikit.components.TextFieldAreaConfiguration
 import ru.kode.uikit.components.TextFieldConfiguration
+import ru.kode.uikit.components.shimmer.ShimmerConfiguration
 
 @Immutable
 data class UikitConfiguration(
@@ -23,6 +24,7 @@ data class UikitConfiguration(
   val textFieldAreaConfiguration: TextFieldAreaConfiguration,
   val pageIndicatorConfiguration: PageIndicatorConfiguration,
   val sliderConfiguration: SliderConfiguration,
+  val shimmerConfiguration: ShimmerConfiguration,
 )
 
 val LocalUikitConfiguration = staticCompositionLocalOf<UikitConfiguration> {
