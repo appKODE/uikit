@@ -16,7 +16,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,10 +30,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ru.kode.uikit.components.configuration.LocalUikitConfiguration
 
 @Composable
 fun TextField(
-  configuration: TextFieldConfiguration,
   value: TextFieldValue,
   onValueChange: (TextFieldValue) -> Unit,
   modifier: Modifier = Modifier,
@@ -54,15 +56,18 @@ fun TextField(
   visualTransformation: VisualTransformation = VisualTransformation.None,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
   keyboardActions: KeyboardActions = KeyboardActions(),
+  configuration: (TextFieldConfiguration) -> TextFieldConfiguration = { it },
 ) {
-
+  val configurationInternal by rememberUpdatedState(
+    configuration(LocalUikitConfiguration.current.textFieldConfiguration)
+  )
   Column(modifier = modifier) {
     if (header != null) {
       header()
     }
     BasicTextField(
       modifier = Modifier.fillMaxWidth(),
-      configuration = configuration,
+      configuration = configurationInternal,
       value = value,
       onValueChange = onValueChange,
       enabled = enabled,
