@@ -10,35 +10,41 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import ru.kode.uikit.components.configuration.LocalUikitConfiguration
 
 @Composable
 fun PageIndicator(
   pageCount: Int,
   currentPageIndex: Int,
-  configuration: PageIndicatorConfiguration,
   modifier: Modifier = Modifier,
+  configuration: (PageIndicatorConfiguration) -> PageIndicatorConfiguration = { it },
 ) {
+  val configurationInternal by rememberUpdatedState(
+    configuration(LocalUikitConfiguration.current.pageIndicatorConfiguration)
+  )
   Row(
     modifier = modifier
-      .background(color = configuration.backgroundColor, shape = configuration.shape)
-      .padding(configuration.padding),
-    horizontalArrangement = Arrangement.spacedBy(configuration.spacing),
+      .background(color = configurationInternal.backgroundColor, shape = configurationInternal.shape)
+      .padding(configurationInternal.padding),
+    horizontalArrangement = Arrangement.spacedBy(configurationInternal.spacing),
     verticalAlignment = Alignment.CenterVertically
   ) {
     repeat(pageCount) { i ->
       val color = if (currentPageIndex == i) {
-        configuration.activeColor
+        configurationInternal.activeColor
       } else {
-        configuration.inactiveColor
+        configurationInternal.inactiveColor
       }
       Box(
         modifier = Modifier
-          .size(configuration.size)
+          .size(configurationInternal.size)
           .background(
             color = color,
             shape = CircleShape
