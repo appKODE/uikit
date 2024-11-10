@@ -26,26 +26,36 @@ fun Checkbox(
   configuration: (CheckboxConfiguration) -> CheckboxConfiguration = { it }
 ) {
   val configurationInternal by rememberUpdatedState(configuration(LocalUikitConfiguration.current.checkbox))
-  val checkedColor = remember(configurationInternal, error) {
-    if (error) configurationInternal.errorCheckedColor else configurationInternal.checkedColor
-  }
-  val uncheckedColor = remember(configurationInternal, error) {
-    if (error) configurationInternal.errorUncheckedColor else configurationInternal.uncheckedColor
-  }
-  val colors = remember(configurationInternal, checkedColor, uncheckedColor) {
+  val colors = remember(configurationInternal, error) {
     CheckboxColors(
       checkedCheckmarkColor = configurationInternal.checkmarkColor,
       uncheckedCheckmarkColor = configurationInternal.checkmarkColor,
-      checkedBoxColor = checkedColor,
-      uncheckedBoxColor = uncheckedColor,
-      disabledCheckedBoxColor = configurationInternal.disabledCheckedColor,
-      disabledUncheckedBoxColor = configurationInternal.disabledUncheckedColor,
-      disabledIndeterminateBoxColor = configurationInternal.disabledCheckedColor,
-      checkedBorderColor = checkedColor,
-      uncheckedBorderColor = uncheckedColor,
-      disabledBorderColor = configurationInternal.disabledCheckedColor,
-      disabledUncheckedBorderColor = configurationInternal.disabledUncheckedColor,
-      disabledIndeterminateBorderColor = configurationInternal.disabledCheckedColor
+      checkedBoxColor = if (error) {
+        configurationInternal.errorCheckedBoxColor
+      } else {
+        configurationInternal.checkedBoxColor
+      },
+      uncheckedBoxColor = if (error) {
+        configurationInternal.errorUncheckedBoxColor
+      } else {
+        configurationInternal.uncheckedBoxColor
+      },
+      disabledCheckedBoxColor = configurationInternal.disabledCheckedBoxColor,
+      disabledUncheckedBoxColor = configurationInternal.disabledUncheckedBoxColor,
+      disabledIndeterminateBoxColor = configurationInternal.disabledCheckedBoxColor,
+      checkedBorderColor = if (error) {
+        configurationInternal.errorCheckedBorderColor
+      } else {
+        configurationInternal.checkedBorderColor
+      },
+      uncheckedBorderColor = if (error) {
+        configurationInternal.errorUncheckedBorderColor
+      } else {
+        configurationInternal.uncheckedBorderColor
+      },
+      disabledBorderColor = configurationInternal.disabledCheckedBorderColor,
+      disabledUncheckedBorderColor = configurationInternal.disabledUncheckedBorderColor,
+      disabledIndeterminateBorderColor = configurationInternal.disabledCheckedBorderColor
     )
   }
   androidx.compose.material3.Checkbox(
@@ -66,10 +76,16 @@ data class CheckboxConfiguration(
   val contentPadding: PaddingValues,
   val shape: Shape,
   val checkmarkColor: Color,
-  val checkedColor: Color,
-  val uncheckedColor: Color,
-  val errorCheckedColor: Color,
-  val errorUncheckedColor: Color,
-  val disabledCheckedColor: Color,
-  val disabledUncheckedColor: Color,
+  val checkedBoxColor: Color,
+  val uncheckedBoxColor: Color,
+  val errorCheckedBoxColor: Color,
+  val errorUncheckedBoxColor: Color,
+  val disabledCheckedBoxColor: Color,
+  val disabledUncheckedBoxColor: Color,
+  val checkedBorderColor: Color,
+  val uncheckedBorderColor: Color,
+  val errorCheckedBorderColor: Color,
+  val errorUncheckedBorderColor: Color,
+  val disabledCheckedBorderColor: Color,
+  val disabledUncheckedBorderColor: Color,
 )
