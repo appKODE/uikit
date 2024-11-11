@@ -59,9 +59,23 @@ subprojects {
   }
 
   plugins.withType<MavenPublishPlugin> {
-    logger.warn("maven for ${project.name}")
+    apply(plugin = "org.gradle.signing")
 
     configure<PublishingExtension> {
+      repositories {
+        maven {
+          name = "Central"
+          val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+          val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+          val versionName: String by project
+          url = if (versionName.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+          credentials {
+            username = project.findProperty("NEXUS_USERTOKEN_NAME")?.toString()
+            password = project.findProperty("NEXUS_USERTOKEN_PASSWORD")?.toString()
+          }
+        }
+      }
+
       publications.withType<MavenPublication> {
         val versionName: String by project
         val pomGroupId: String by project
@@ -101,6 +115,10 @@ subprojects {
             }
           }
         }
+      }
+
+      configure<SigningExtension> {
+        sign(publications)
       }
     }
   }

@@ -14,6 +14,8 @@ android {
     aarMetadata {
       minCompileSdk = 26
     }
+    val versionName: String by project
+    version = versionName
   }
 
   buildFeatures {
