@@ -28,7 +28,6 @@ CompositionLocalProvider(
 - Checkbox
 - RadioButton
 - ModalBottomSheet
-- ModalBottomSheet
 - Slider
 - TextField
 - TextFieldArea
