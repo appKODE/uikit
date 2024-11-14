@@ -10,9 +10,9 @@ android {
   compileSdk = 34
 
   defaultConfig {
-    minSdk = 26
+    minSdk = 21
     aarMetadata {
-      minCompileSdk = 26
+      minCompileSdk = 21
     }
     val versionName: String by project
     version = versionName
