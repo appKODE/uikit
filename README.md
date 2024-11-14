@@ -13,12 +13,12 @@ implementation "ru.kode.uikit:uikit-components:$version"
 Настройка конфигурации. Целесообразно сделать это как можно выше в иерархии компонентов (тема приложения, Activity).
 ```kotlin
 val configuration = UiKitConfiguration(
-    ...
+    // TODO
 )
 CompositionLocalProvider(
     LocalUiKitConfiguration provides configuration
 ) {
-    ...
+    // TODO
 }
 ```
 На этом настройка закончена. Можно использовать любые компоненты.
