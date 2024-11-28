@@ -6,6 +6,7 @@ import ru.kode.uikit.components.BottomSheetConfiguration
 import ru.kode.uikit.components.ButtonColors
 import ru.kode.uikit.components.ButtonConfiguration
 import ru.kode.uikit.components.CheckboxConfiguration
+import ru.kode.uikit.components.DatePickerConfiguration
 import ru.kode.uikit.components.PageIndicatorConfiguration
 import ru.kode.uikit.components.RadioButtonConfiguration
 import ru.kode.uikit.components.SliderConfiguration
@@ -25,6 +26,7 @@ data class UikitConfiguration(
   val pageIndicatorConfiguration: PageIndicatorConfiguration,
   val sliderConfiguration: SliderConfiguration,
   val shimmerConfiguration: ShimmerConfiguration,
+  val datePickerConfiguration: DatePickerConfiguration,
 )
 
 val LocalUikitConfiguration = compositionLocalOf<UikitConfiguration> {
