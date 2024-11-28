@@ -33,9 +33,9 @@ CompositionLocalProvider(
 - TextFieldArea
 - PageIndicator
 - Shimmer(компонент и модификатор)
+- DatePicker
 
 ## TODO
-- Добавить DatePicker
 - Избавиться от зависимости на Material3
 
 [mavenbadge-svg]: https://maven-badges.herokuapp.com/maven-central/ru.kode.uikit/uikit-components/badge.svg
