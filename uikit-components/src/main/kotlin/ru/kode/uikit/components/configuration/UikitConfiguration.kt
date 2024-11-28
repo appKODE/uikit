@@ -1,7 +1,7 @@
 package ru.kode.uikit.components.configuration
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.compositionLocalOf
 import ru.kode.uikit.components.BottomSheetConfiguration
 import ru.kode.uikit.components.ButtonColors
 import ru.kode.uikit.components.ButtonConfiguration
@@ -27,6 +27,6 @@ data class UikitConfiguration(
   val shimmerConfiguration: ShimmerConfiguration,
 )
 
-val LocalUikitConfiguration = staticCompositionLocalOf<UikitConfiguration> {
+val LocalUikitConfiguration = compositionLocalOf<UikitConfiguration> {
   error("no UikitConfiguration provided")
 }
