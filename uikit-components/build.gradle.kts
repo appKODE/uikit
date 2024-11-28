@@ -22,6 +22,16 @@ android {
     compose = true
   }
 
+  compileOptions {
+    isCoreLibraryDesugaringEnabled = true
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+
+  kotlin {
+    jvmToolchain(17)
+  }
+
   publishing {
     singleVariant("release") {
       withSourcesJar()
@@ -43,4 +53,5 @@ publishing {
 dependencies {
   implementation(libs.coroutines.android)
   implementation(libs.bundles.compose)
+  coreLibraryDesugaring(libs.android.jdk.desugar)
 }
