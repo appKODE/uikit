@@ -33,15 +33,15 @@ fun RangeSlider(
   valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
   configuration: (SliderConfiguration) -> SliderConfiguration = { it },
   startThumb: @Composable (RangeSliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Thumb(config, enabled)
   },
   endThumb: @Composable (RangeSliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Thumb(config, enabled)
   },
   track: @Composable (RangeSliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Track(config, it, enabled)
   },
   @IntRange(from = 0) steps: Int = 0,
@@ -68,11 +68,11 @@ fun MinSlider(
   @IntRange(from = 0) steps: Int = 0,
   configuration: (SliderConfiguration) -> SliderConfiguration = { it },
   thumb: @Composable (SliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Thumb(config, enabled)
   },
   track: @Composable (SliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Track(config, Slider.Direction.Min, it, enabled)
   },
   valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
@@ -98,11 +98,11 @@ fun MaxSlider(
   @IntRange(from = 0) steps: Int = 0,
   configuration: (SliderConfiguration) -> SliderConfiguration = { it },
   thumb: @Composable (SliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Thumb(config, enabled)
   },
   track: @Composable (SliderState) -> Unit = {
-    val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
+    val config by rememberUpdatedState(configuration(requireSliderConfiguration()))
     Slider.Track(config, Slider.Direction.Max, it, enabled)
   },
   valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
@@ -253,3 +253,8 @@ data class SliderConfiguration(
   val disabledActiveTrackColor: Color,
   val disabledInactiveTrackColor: Color,
 )
+
+@Composable
+private fun requireSliderConfiguration(): SliderConfiguration {
+  return LocalUikitConfiguration.current.sliderConfiguration ?: error("no SliderConfiguration provided")
+}

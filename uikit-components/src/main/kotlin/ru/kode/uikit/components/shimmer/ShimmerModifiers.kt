@@ -14,7 +14,9 @@ fun Modifier.shimmer(
   visible: Boolean,
   configuration: (ShimmerConfiguration) -> ShimmerConfiguration = { it }
 ): Modifier = composed {
-  val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.shimmerConfiguration))
+  val config by rememberUpdatedState(
+    configuration(LocalUikitConfiguration.current.shimmerConfiguration ?: error("no ShimmerConfiguration provided"))
+  )
   placeholder(
     visible = visible,
     shape = config.shape,

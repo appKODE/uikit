@@ -23,7 +23,11 @@ fun RadioButton(
   error: Boolean = false,
   configuration: (RadioButtonConfiguration) -> RadioButtonConfiguration = { it }
 ) {
-  val configurationInternal by rememberUpdatedState(configuration(LocalUikitConfiguration.current.radioButton))
+  val configurationInternal by rememberUpdatedState(
+    configuration(
+      LocalUikitConfiguration.current.radioButton ?: error("no RadioButtonConfiguration provided")
+    )
+  )
   val colors = remember(configurationInternal, error) {
     RadioButtonColors(
       selectedColor = if (error) {

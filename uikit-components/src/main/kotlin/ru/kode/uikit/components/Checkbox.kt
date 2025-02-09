@@ -25,7 +25,9 @@ fun Checkbox(
   onClick: () -> Unit = { },
   configuration: (CheckboxConfiguration) -> CheckboxConfiguration = { it }
 ) {
-  val configurationInternal by rememberUpdatedState(configuration(LocalUikitConfiguration.current.checkbox))
+  val configurationInternal by rememberUpdatedState(
+    configuration(LocalUikitConfiguration.current.checkbox ?: error("no CheckboxConfiguration provided"))
+  )
   val colors = remember(configurationInternal, error) {
     CheckboxColors(
       checkedCheckmarkColor = configurationInternal.checkmarkColor,

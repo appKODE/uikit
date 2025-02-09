@@ -66,7 +66,9 @@ fun TextFieldDatePicker(
   configuration: (DatePickerConfiguration) -> DatePickerConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.datePickerConfiguration)
+    configuration(
+      LocalUikitConfiguration.current.datePickerConfiguration ?: error("no DatePickerConfiguration provided")
+    )
   )
   var isModalDatePickerActive by remember { mutableStateOf(false) }
   val textColor = remember(enabled, error, configurationInternal.textField) {
@@ -212,7 +214,9 @@ private fun InlineDatePicker(
   configuration: (DatePickerConfiguration) -> DatePickerConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.datePickerConfiguration)
+    configuration(
+      LocalUikitConfiguration.current.datePickerConfiguration ?: error("no DatePickerConfiguration provided")
+    )
   )
   var isModalDatePickerActive by remember { mutableStateOf(false) }
   val textColor = remember(enabled, configurationInternal.inline) {

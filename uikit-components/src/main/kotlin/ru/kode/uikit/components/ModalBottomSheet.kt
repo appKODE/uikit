@@ -33,7 +33,9 @@ fun ModalBottomSheet(
   sheetContent: @Composable ColumnScope.() -> Unit,
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.bottomSheetConfiguration)
+    configuration(
+      LocalUikitConfiguration.current.bottomSheetConfiguration ?: error("no BottomSheetConfiguration provided")
+    )
   )
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   androidx.compose.material3.ModalBottomSheet(

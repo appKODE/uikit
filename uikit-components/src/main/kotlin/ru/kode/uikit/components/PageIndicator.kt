@@ -27,7 +27,9 @@ fun PageIndicator(
   configuration: (PageIndicatorConfiguration) -> PageIndicatorConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.pageIndicatorConfiguration)
+    configuration(
+      LocalUikitConfiguration.current.pageIndicatorConfiguration ?: error("no PageIndicatorConfiguration provided")
+    )
   )
   Row(
     modifier = modifier

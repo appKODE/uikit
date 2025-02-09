@@ -59,7 +59,9 @@ fun TextField(
   configuration: (TextFieldConfiguration) -> TextFieldConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.textFieldConfiguration)
+    configuration(
+      LocalUikitConfiguration.current.textFieldConfiguration ?: error("no TextFieldConfiguration provided")
+    )
   )
   Column(modifier = modifier) {
     if (header != null) {

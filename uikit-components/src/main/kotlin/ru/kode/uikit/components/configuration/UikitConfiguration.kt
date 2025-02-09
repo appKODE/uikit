@@ -16,17 +16,17 @@ import ru.kode.uikit.components.shimmer.ShimmerConfiguration
 
 @Immutable
 data class UikitConfiguration(
-  val checkbox: CheckboxConfiguration,
-  val radioButton: RadioButtonConfiguration,
-  val buttonConfigurations: List<ButtonConfiguration>,
-  val buttonColors: List<ButtonColors>,
-  val bottomSheetConfiguration: BottomSheetConfiguration,
-  val textFieldConfiguration: TextFieldConfiguration,
-  val textFieldAreaConfiguration: TextFieldAreaConfiguration,
-  val pageIndicatorConfiguration: PageIndicatorConfiguration,
-  val sliderConfiguration: SliderConfiguration,
-  val shimmerConfiguration: ShimmerConfiguration,
-  val datePickerConfiguration: DatePickerConfiguration,
+  val checkbox: CheckboxConfiguration? = null,
+  val radioButton: RadioButtonConfiguration? = null,
+  val buttonConfigurations: List<ButtonConfiguration> = emptyList(),
+  val buttonColors: List<ButtonColors> = emptyList(),
+  val bottomSheetConfiguration: BottomSheetConfiguration? = null,
+  val textFieldConfiguration: TextFieldConfiguration? = null,
+  val textFieldAreaConfiguration: TextFieldAreaConfiguration? = null,
+  val pageIndicatorConfiguration: PageIndicatorConfiguration? = null,
+  val sliderConfiguration: SliderConfiguration? = null,
+  val shimmerConfiguration: ShimmerConfiguration? = null,
+  val datePickerConfiguration: DatePickerConfiguration? = null,
 )
 
 val LocalUikitConfiguration = compositionLocalOf<UikitConfiguration> {
