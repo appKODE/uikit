@@ -75,10 +75,10 @@ The workflow runs `./gradlew publishAndReleaseToMavenCentral`. It requires the f
 
 To verify the artifact build locally: `./gradlew publishToMavenLocal`.
 
-See [CHANGELOG.md](CHANGELOG.md) for the release history.
+All components are built purely on Compose Foundation — the library has no dependency on Material or
+Material3.
 
-## TODO
-- Remove the dependency on Material3
+See [CHANGELOG.md](CHANGELOG.md) for the release history.
 
 [mavenbadge-svg]: https://maven-badges.herokuapp.com/maven-central/ru.kode.uikit/uikit-components/badge.svg
 [mavencentral]: https://mvnrepository.com/artifact/ru.kode.uikit/uikit-components
