@@ -55,7 +55,7 @@ fun RangeSlider(
     startThumb = startThumb,
     endThumb = endThumb,
     track = track,
-    steps = steps
+    steps = steps,
   )
 }
 
@@ -85,7 +85,7 @@ fun MinSlider(
     steps = steps,
     thumb = thumb,
     track = track,
-    valueRange = valueRange
+    valueRange = valueRange,
   )
 }
 
@@ -115,7 +115,7 @@ fun MaxSlider(
     steps = steps,
     thumb = thumb,
     track = track,
-    valueRange = valueRange
+    valueRange = valueRange,
   )
 }
 
@@ -140,12 +140,12 @@ object Slider {
       modifier = Modifier.border(
         width = configuration.thumbBorderWidth,
         color = configuration.thumbBorderColor,
-        shape = CircleShape
+        shape = CircleShape,
       ),
       interactionSource = remember { MutableInteractionSource() },
       colors = colors,
       enabled = enabled,
-      thumbSize = configuration.thumbSize
+      thumbSize = configuration.thumbSize,
     )
   }
 
@@ -179,7 +179,7 @@ object Slider {
       inactiveTrackColor,
       activeTrackColor,
       disabledInactiveTrackColor,
-      disabledActiveTrackColor
+      disabledActiveTrackColor,
     ) {
       SliderColors(
         thumbColor = Color.Unspecified,
@@ -200,7 +200,7 @@ object Slider {
       enabled = enabled,
       colors = colors,
       thumbTrackGapSize = configuration.thumbTrackGapSize,
-      trackInsideCornerSize = configuration.trackInsideCornerSize
+      trackInsideCornerSize = configuration.trackInsideCornerSize,
     )
   }
 
@@ -226,13 +226,13 @@ object Slider {
       enabled = enabled,
       colors = colors,
       thumbTrackGapSize = configuration.thumbTrackGapSize,
-      trackInsideCornerSize = configuration.trackInsideCornerSize
+      trackInsideCornerSize = configuration.trackInsideCornerSize,
     )
   }
 
   enum class Direction {
     Min,
-    Max
+    Max,
   }
 }
 

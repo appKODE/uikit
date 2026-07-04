@@ -17,8 +17,8 @@ fun Shimmer(
     modifier = modifier
       .shimmer(
         visible = true,
-        configuration = configuration
+        configuration = configuration,
       )
-      .size(width, height)
+      .size(width, height),
   )
 }

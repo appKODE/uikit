@@ -51,10 +51,10 @@ fun TextFieldArea(
   visualTransformation: VisualTransformation = VisualTransformation.None,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
   keyboardActions: KeyboardActions = KeyboardActions(),
-  configuration: (TextFieldAreaConfiguration) -> TextFieldAreaConfiguration = { it }
+  configuration: (TextFieldAreaConfiguration) -> TextFieldAreaConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.textFieldAreaConfiguration)
+    configuration(LocalUikitConfiguration.current.textFieldAreaConfiguration),
   )
   Column(modifier = modifier) {
     if (header != null) {
@@ -76,7 +76,7 @@ fun TextFieldArea(
       leadingIcon = leadingIcon,
       trailingIcon = trailingIcon,
       contentPadding = contentPadding,
-      contentHeight = contentHeight
+      contentHeight = contentHeight,
     )
     if (footer != null) {
       footer()
@@ -118,13 +118,13 @@ private fun BasicTextField(
         isError -> configuration.errorTextColor
         isFocused -> configuration.focusedTextColor
         else -> configuration.unfocusedTextColor
-      }
+      },
     ),
     interactionSource = interactionSource,
     visualTransformation = visualTransformation,
     keyboardOptions = keyboardOptions,
     keyboardActions = keyboardActions,
-    cursorBrush = SolidColor(if (isError) configuration.errorCursorColor else configuration.cursorColor)
+    cursorBrush = SolidColor(if (isError) configuration.errorCursorColor else configuration.cursorColor),
   ) { innerTextField ->
     TextFieldDecoration(
       modifier = Modifier
@@ -149,7 +149,7 @@ private fun BasicTextField(
       unfocusedBorderColor = configuration.unfocusedBorderColor,
       disabledBorderColor = configuration.disabledBorderColor,
       errorContainerColor = configuration.errorContainerColor,
-      unfocusedContainerColor = configuration.unfocusedContainerColor
+      unfocusedContainerColor = configuration.unfocusedContainerColor,
     )
   }
 }
@@ -187,7 +187,7 @@ private fun TextFieldDecoration(
           isFocused -> focusedContainerColor
           else -> unfocusedContainerColor
         },
-        shape = shape
+        shape = shape,
       )
       .border(
         width = if (isError) errorBorderWidth else borderWidth,
@@ -197,9 +197,9 @@ private fun TextFieldDecoration(
           isFocused -> focusedBorderColor
           else -> unfocusedBorderColor
         },
-        shape = shape
+        shape = shape,
       ),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     if (leadingIcon != null) {
       leadingIcon()
@@ -209,7 +209,7 @@ private fun TextFieldDecoration(
         .weight(1f)
         .heightIn(min = fieldMinHeight)
         .padding(contentPadding),
-      contentAlignment = Alignment.CenterStart
+      contentAlignment = Alignment.CenterStart,
     ) {
       if (placeholder != null) {
         placeholder()

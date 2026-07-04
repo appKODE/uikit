@@ -33,7 +33,7 @@ fun ModalBottomSheet(
   sheetContent: @Composable ColumnScope.() -> Unit,
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.bottomSheetConfiguration)
+    configuration(LocalUikitConfiguration.current.bottomSheetConfiguration),
   )
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   androidx.compose.material3.ModalBottomSheet(
@@ -43,13 +43,13 @@ fun ModalBottomSheet(
     sheetMaxWidth = configurationInternal.sheetMaxWidth,
     shape = RoundedCornerShape(
       topStart = configurationInternal.cornerRadius,
-      topEnd = configurationInternal.cornerRadius
+      topEnd = configurationInternal.cornerRadius,
     ),
     dragHandle = if (showHandle) {
       {
         BottomSheetHandle(
           configuration = configurationInternal.handleConfiguration,
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     } else {
@@ -58,7 +58,7 @@ fun ModalBottomSheet(
     sheetState = sheetState,
     onDismissRequest = onDismissRequest,
     contentWindowInsets = { WindowInsets.navigationBars },
-    content = sheetContent
+    content = sheetContent,
   )
 }
 
@@ -69,7 +69,7 @@ private fun BottomSheetHandle(
 ) {
   Box(
     modifier = modifier,
-    contentAlignment = Alignment.Center
+    contentAlignment = Alignment.Center,
   ) {
     Spacer(
       modifier = Modifier
@@ -77,8 +77,8 @@ private fun BottomSheetHandle(
         .size(width = configuration.width, height = configuration.height)
         .background(
           color = configuration.color,
-          shape = configuration.shape
-        )
+          shape = configuration.shape,
+        ),
     )
   }
 }

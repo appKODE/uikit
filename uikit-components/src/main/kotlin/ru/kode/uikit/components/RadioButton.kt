@@ -21,7 +21,7 @@ fun RadioButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
   error: Boolean = false,
-  configuration: (RadioButtonConfiguration) -> RadioButtonConfiguration = { it }
+  configuration: (RadioButtonConfiguration) -> RadioButtonConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(configuration(LocalUikitConfiguration.current.radioButton))
   val colors = remember(configurationInternal, error) {
@@ -37,7 +37,7 @@ fun RadioButton(
         configurationInternal.unselectedColor
       },
       disabledSelectedColor = configurationInternal.disabledSelectedColor,
-      disabledUnselectedColor = configurationInternal.disabledUnselectedColor
+      disabledUnselectedColor = configurationInternal.disabledUnselectedColor,
     )
   }
   androidx.compose.material3.RadioButton(
@@ -47,7 +47,7 @@ fun RadioButton(
       .padding(configurationInternal.contentPadding)
       .size(configurationInternal.size),
     enabled = enabled,
-    colors = colors
+    colors = colors,
   )
 }
 

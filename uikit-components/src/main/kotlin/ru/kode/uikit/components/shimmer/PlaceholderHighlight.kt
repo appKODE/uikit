@@ -30,10 +30,7 @@ interface PlaceholderHighlight {
    * @param progress the current animated progress in the range of 0f..1f.
    * @param size The size of the current layout to draw in.
    */
-  public fun brush(
-    @FloatRange(from = 0.0, to = 1.0) progress: Float,
-    size: Size
-  ): Brush
+  public fun brush(@FloatRange(from = 0.0, to = 1.0) progress: Float, size: Size): Brush
 
   /**
    * Return the desired alpha value used for drawing the [Brush] returned from [brush].
@@ -86,10 +83,8 @@ fun PlaceholderHighlight.Companion.shimmer(
   progressForMaxAlpha = progressForMaxAlpha,
 )
 
-private data class Fade(
-  private val highlightColor: Color,
-  override val animationSpec: InfiniteRepeatableSpec<Float>,
-) : PlaceholderHighlight {
+private data class Fade(private val highlightColor: Color, override val animationSpec: InfiniteRepeatableSpec<Float>) :
+  PlaceholderHighlight {
   private val brush = SolidColor(highlightColor)
 
   override fun brush(progress: Float, size: Size): Brush = brush
@@ -101,10 +96,7 @@ private data class Shimmer(
   override val animationSpec: InfiniteRepeatableSpec<Float>,
   private val progressForMaxAlpha: Float = 0.6f,
 ) : PlaceholderHighlight {
-  override fun brush(
-    progress: Float,
-    size: Size,
-  ): Brush = Brush.radialGradient(
+  override fun brush(progress: Float, size: Size): Brush = Brush.radialGradient(
     colors = listOf(
       highlightColor.copy(alpha = 0f),
       highlightColor,
@@ -120,15 +112,16 @@ private data class Shimmer(
       lerp(
         start = 0f,
         stop = 1f,
-        fraction = progress / progressForMaxAlpha
+        fraction = progress / progressForMaxAlpha,
       )
     }
+
     // From ProgressForOpaqueAlpha..1f we animate from 1..0
     else -> {
       lerp(
         start = 1f,
         stop = 0f,
-        fraction = (progress - progressForMaxAlpha) / (1f - progressForMaxAlpha)
+        fraction = (progress - progressForMaxAlpha) / (1f - progressForMaxAlpha),
       )
     }
   }

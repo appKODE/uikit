@@ -66,7 +66,7 @@ fun TextFieldDatePicker(
   configuration: (DatePickerConfiguration) -> DatePickerConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.datePickerConfiguration)
+    configuration(LocalUikitConfiguration.current.datePickerConfiguration),
   )
   var isModalDatePickerActive by remember { mutableStateOf(false) }
   val textColor = remember(enabled, error, configurationInternal.textField) {
@@ -78,7 +78,7 @@ fun TextFieldDatePicker(
   }
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(8.dp)
+    verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     if (label != null) {
       Text(
@@ -91,7 +91,7 @@ fun TextFieldDatePicker(
             error -> configurationInternal.textField.errorLabelColor
             else -> configurationInternal.textField.labelColor
           }
-        }
+        },
       )
     }
     Row(
@@ -106,7 +106,7 @@ fun TextFieldDatePicker(
               else -> configurationInternal.textField.borderColor
             }
           },
-          shape = configurationInternal.textField.shape
+          shape = configurationInternal.textField.shape,
         )
         .background(
           color = remember(enabled, error, configurationInternal.textField) {
@@ -116,20 +116,20 @@ fun TextFieldDatePicker(
               else -> configurationInternal.textField.backgroundColor
             }
           },
-          shape = configurationInternal.textField.shape
+          shape = configurationInternal.textField.shape,
         )
         .clip(configurationInternal.textField.shape)
         .clickable(
           interactionSource = remember { MutableInteractionSource() },
           indication = ripple(
-            color = textColor
+            color = textColor,
           ),
           enabled = enabled,
-          onClick = { isModalDatePickerActive = true }
+          onClick = { isModalDatePickerActive = true },
         )
         .padding(configurationInternal.textField.contentPadding),
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(8.dp)
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       configurationInternal.textField.leadingIconRes?.let {
         Icon(
@@ -141,7 +141,7 @@ fun TextFieldDatePicker(
             } else {
               configurationInternal.textField.disabledLeadingIconColor
             }
-          }
+          },
         )
       }
       val formattedDate = remember(state.selectedDate) {
@@ -151,7 +151,7 @@ fun TextFieldDatePicker(
         modifier = Modifier.weight(1f),
         text = formattedDate,
         style = configurationInternal.textField.textStyle,
-        color = textColor
+        color = textColor,
       )
       Icon(
         painter = painterResource(configurationInternal.textField.trailingIconRes),
@@ -162,13 +162,13 @@ fun TextFieldDatePicker(
           } else {
             configurationInternal.textField.disabledTrailingIconColor
           }
-        }
+        },
       )
       if (error) {
         Icon(
           painter = painterResource(configurationInternal.textField.errorIconRes),
           contentDescription = null,
-          tint = configurationInternal.textField.errorIconColor
+          tint = configurationInternal.textField.errorIconColor,
         )
       }
     }
@@ -183,7 +183,7 @@ fun TextFieldDatePicker(
             error -> configurationInternal.textField.errorHelperColor
             else -> configurationInternal.textField.helperColor
           }
-        }
+        },
       )
     }
   }
@@ -198,7 +198,7 @@ fun TextFieldDatePicker(
         isModalDatePickerActive = false
       },
       yearRange = state.yearRange,
-      selectableDates = state.selectableDates
+      selectableDates = state.selectableDates,
     )
   }
 }
@@ -212,7 +212,7 @@ private fun InlineDatePicker(
   configuration: (DatePickerConfiguration) -> DatePickerConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.datePickerConfiguration)
+    configuration(LocalUikitConfiguration.current.datePickerConfiguration),
   )
   var isModalDatePickerActive by remember { mutableStateOf(false) }
   val textColor = remember(enabled, configurationInternal.inline) {
@@ -226,13 +226,13 @@ private fun InlineDatePicker(
     modifier = modifier.clickable(
       interactionSource = remember { MutableInteractionSource() },
       indication = ripple(
-        color = textColor
+        color = textColor,
       ),
       enabled = enabled,
-      onClick = { isModalDatePickerActive = true }
+      onClick = { isModalDatePickerActive = true },
     ),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(4.dp)
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
   ) {
     val formattedDate = remember(state.selectedDate) {
       state.selectedDate.format(DateTimeFormatter.ofPattern(DAY_MONTH_YEAR_TIME_PATTERN))
@@ -240,7 +240,7 @@ private fun InlineDatePicker(
     Text(
       text = formattedDate,
       style = configurationInternal.inline.textStyle,
-      color = textColor
+      color = textColor,
     )
     Icon(
       modifier = Modifier.size(24.dp),
@@ -252,7 +252,7 @@ private fun InlineDatePicker(
         } else {
           configurationInternal.inline.disabledIconColor
         }
-      }
+      },
     )
   }
   if (isModalDatePickerActive) {
@@ -266,7 +266,7 @@ private fun InlineDatePicker(
         isModalDatePickerActive = false
       },
       yearRange = state.yearRange,
-      selectableDates = state.selectableDates
+      selectableDates = state.selectableDates,
     )
   }
 }
@@ -283,7 +283,7 @@ private fun ModalDatePicker(
   val state = androidx.compose.material3.rememberDatePickerState(
     initialSelectedDateMillis = date.atStartOfDay(defaultZoneId).toInstant().toEpochMilli(),
     yearRange = yearRange,
-    selectableDates = selectableDates
+    selectableDates = selectableDates,
   )
   var isUserSelection by remember { mutableStateOf(false) }
   LaunchedEffect(state.selectedDateMillis) {
@@ -295,7 +295,7 @@ private fun ModalDatePicker(
   }
   BasicAlertDialog(
     onDismissRequest = onDismissRequest,
-    properties = DialogProperties(usePlatformDefaultWidth = false)
+    properties = DialogProperties(usePlatformDefaultWidth = false),
   ) {
     androidx.compose.material3.DatePicker(
       modifier = Modifier
@@ -310,9 +310,9 @@ private fun ModalDatePicker(
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
             lineHeight = 16.sp,
-            letterSpacing = TextUnit(0.004f, TextUnitType.Em)
+            letterSpacing = TextUnit(0.004f, TextUnitType.Em),
           ),
-          color = Color(0xFF000000).copy(alpha = 0.7f)
+          color = Color(0xFF000000).copy(alpha = 0.7f),
         )
       },
       headline = {
@@ -328,9 +328,9 @@ private fun ModalDatePicker(
           style = TextStyle(
             fontWeight = FontWeight.SemiBold,
             fontSize = 28.sp,
-            lineHeight = 36.sp
+            lineHeight = 36.sp,
           ),
-          color = Color(0xFF000000)
+          color = Color(0xFF000000),
         )
       },
       showModeToggle = false,
@@ -344,22 +344,16 @@ fun rememberDatePickerState(
   initialSelectedDate: LocalDate = LocalDate.now(),
   yearRange: IntRange = DatePickerDefaults.YearRange,
   selectableDates: SelectableDates = DatePickerDefaults.AllDates,
-): DatePickerState {
-  return remember {
-    DatePickerState(
-      selectedDate = initialSelectedDate,
-      yearRange = yearRange,
-      selectableDates = selectableDates
-    )
-  }
+): DatePickerState = remember {
+  DatePickerState(
+    selectedDate = initialSelectedDate,
+    yearRange = yearRange,
+    selectableDates = selectableDates,
+  )
 }
 
 @Stable
-data class DatePickerState(
-  var selectedDate: LocalDate,
-  val yearRange: IntRange,
-  val selectableDates: SelectableDates,
-)
+data class DatePickerState(var selectedDate: LocalDate, val yearRange: IntRange, val selectableDates: SelectableDates)
 
 @Immutable
 data class DatePickerConfiguration(
