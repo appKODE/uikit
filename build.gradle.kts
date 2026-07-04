@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   alias(libs.plugins.kotlinCompose) apply false
   alias(libs.plugins.androidLibrary) apply false
+  alias(libs.plugins.androidApplication) apply false
+  alias(libs.plugins.ksp) apply false
   alias(libs.plugins.vanniktech.maven.publish) apply false
 
   alias(libs.plugins.spotless)

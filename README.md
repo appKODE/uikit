@@ -36,6 +36,28 @@ That completes the setup — you can now use any of the components.
 - Shimmer (component and modifier)
 - DatePicker
 
+## Component gallery
+
+The `:sample` module is a runnable demo app that hosts a component browser powered by
+[Showkase](https://github.com/airbnb/Showkase). It lets you browse every component (grouped by
+type, with light/dark, RTL and font-scale toggles) so you can visually track the library as it
+changes.
+
+Run it on a device or emulator:
+```bash
+./gradlew :sample:installDebug
+```
+Then launch **Uikit Gallery** and tap **Open browser**. Alternatively, open the module in Android
+Studio and run the `sample` configuration, or view any preview inline via the IDE Compose preview.
+
+Adding a component to the gallery: drop a parameterless `@Preview @ShowkaseComposable(...)` function
+under `sample/src/main/kotlin/ru/kode/uikit/sample/previews/`, wrapping the body in `PreviewTheme { }`
+(which supplies a concrete `LocalUikitConfiguration`). Showkase discovers it automatically — no
+registration needed.
+
+> The gallery configuration in `PreviewUikitConfiguration.kt` is illustrative and sample-only; it is
+> not the library's canonical theme and is not published.
+
 ## Publishing
 
 The library is published to Maven Central (Central Portal) via the

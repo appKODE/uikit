@@ -9,3 +9,4 @@ pluginManagement {
 }
 
 include(":uikit-components")
+include(":sample")
