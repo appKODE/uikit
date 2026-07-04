@@ -2,15 +2,16 @@
 
 [![Maven Central][mavenbadge-svg]][mavencentral]
 
-Библиотека, содержащая часто используемые ui-компоненты на [Jetpack Compose](https://developer.android.com/compose).
+A library of commonly used UI components built on [Jetpack Compose](https://developer.android.com/compose).
 
-## Использование
+## Usage
 
-Подключение зависимости.
+Add the dependency:
 ```groovy
 implementation "ru.kode.uikit:uikit-components:$version"
 ```
-Настройка конфигурации. Целесообразно сделать это как можно выше в иерархии компонентов (тема приложения, Activity).
+Set up the configuration. It's best to do this as high in the component hierarchy as possible
+(app theme, Activity):
 ```kotlin
 val configuration = UiKitConfiguration(
     // TODO
@@ -21,9 +22,9 @@ CompositionLocalProvider(
     // TODO
 }
 ```
-На этом настройка закончена. Можно использовать любые компоненты.
+That completes the setup — you can now use any of the components.
 
-## Компоненты
+## Components
 - Button
 - Checkbox
 - RadioButton
@@ -32,11 +33,30 @@ CompositionLocalProvider(
 - TextField
 - TextFieldArea
 - PageIndicator
-- Shimmer(компонент и модификатор)
+- Shimmer (component and modifier)
 - DatePicker
 
+## Publishing
+
+The library is published to Maven Central (Central Portal) via the
+[vanniktech/gradle-maven-publish-plugin](https://github.com/vanniktech/gradle-maven-publish-plugin).
+The version is defined by `versionName` in `gradle.properties`.
+
+Releases run automatically through GitHub Actions (`.github/workflows/release.yml`) on a git tag push:
+```bash
+git tag 0.1.3
+git push origin 0.1.3
+```
+The workflow runs `./gradlew publishAndReleaseToMavenCentral`. It requires the following secrets in the
+`release` environment: `NEXUS_USERTOKEN_NAME`, `NEXUS_USERTOKEN_PASSWORD`, `SIGNING_KEY_ID`,
+`SIGNING_PASSWORD`, `SIGNING_SECRET_KEY_RING_FILE_BASE64`.
+
+To verify the artifact build locally: `./gradlew publishToMavenLocal`.
+
+See [CHANGELOG.md](CHANGELOG.md) for the release history.
+
 ## TODO
-- Избавиться от зависимости на Material3
+- Remove the dependency on Material3
 
 [mavenbadge-svg]: https://maven-badges.herokuapp.com/maven-central/ru.kode.uikit/uikit-components/badge.svg
 [mavencentral]: https://mvnrepository.com/artifact/ru.kode.uikit/uikit-components

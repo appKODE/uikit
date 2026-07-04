@@ -23,7 +23,7 @@ fun Checkbox(
   enabled: Boolean = true,
   error: Boolean = false,
   onClick: () -> Unit = { },
-  configuration: (CheckboxConfiguration) -> CheckboxConfiguration = { it }
+  configuration: (CheckboxConfiguration) -> CheckboxConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(configuration(LocalUikitConfiguration.current.checkbox))
   val colors = remember(configurationInternal, error) {
@@ -55,7 +55,7 @@ fun Checkbox(
       },
       disabledBorderColor = configurationInternal.disabledCheckedBorderColor,
       disabledUncheckedBorderColor = configurationInternal.disabledUncheckedBorderColor,
-      disabledIndeterminateBorderColor = configurationInternal.disabledCheckedBorderColor
+      disabledIndeterminateBorderColor = configurationInternal.disabledCheckedBorderColor,
     )
   }
   androidx.compose.material3.Checkbox(
@@ -66,7 +66,7 @@ fun Checkbox(
       .clip(configurationInternal.shape)
       .size(configurationInternal.size),
     enabled = enabled,
-    colors = colors
+    colors = colors,
   )
 }
 

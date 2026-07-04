@@ -12,7 +12,7 @@ import ru.kode.uikit.components.configuration.LocalUikitConfiguration
 
 fun Modifier.shimmer(
   visible: Boolean,
-  configuration: (ShimmerConfiguration) -> ShimmerConfiguration = { it }
+  configuration: (ShimmerConfiguration) -> ShimmerConfiguration = { it },
 ): Modifier = composed {
   val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.shimmerConfiguration))
   placeholder(
@@ -21,13 +21,9 @@ fun Modifier.shimmer(
     color = config.color,
     highlight = PlaceholderHighlight.shimmer(highlightColor = config.highlightColor),
     placeholderFadeTransitionSpec = { tween() },
-    contentFadeTransitionSpec = { tween() }
+    contentFadeTransitionSpec = { tween() },
   )
 }
 
 @Immutable
-data class ShimmerConfiguration(
-  val shape: Shape,
-  val color: Color,
-  val highlightColor: Color,
-)
+data class ShimmerConfiguration(val shape: Shape, val color: Color, val highlightColor: Color)

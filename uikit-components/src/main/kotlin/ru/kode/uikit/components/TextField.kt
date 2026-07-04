@@ -59,7 +59,7 @@ fun TextField(
   configuration: (TextFieldConfiguration) -> TextFieldConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.textFieldConfiguration)
+    configuration(LocalUikitConfiguration.current.textFieldConfiguration),
   )
   Column(modifier = modifier) {
     if (header != null) {
@@ -83,7 +83,7 @@ fun TextField(
       leadingIcon = leadingIcon,
       trailingIcon = trailingIcon,
       contentPadding = contentPadding,
-      contentHeight = contentHeight
+      contentHeight = contentHeight,
     )
     if (footer != null) {
       footer()
@@ -127,7 +127,7 @@ private fun BasicTextField(
         isError -> configuration.errorTextColor
         isFocused -> configuration.focusedTextColor
         else -> configuration.unfocusedTextColor
-      }
+      },
     ),
     interactionSource = interactionSource,
     visualTransformation = visualTransformation,
@@ -136,7 +136,7 @@ private fun BasicTextField(
     cursorBrush = SolidColor(if (isError) configuration.errorCursorColor else configuration.cursorColor),
     singleLine = maxLines == 1,
     maxLines = maxLines,
-    minLines = minLines
+    minLines = minLines,
   ) { innerTextField ->
     TextFieldDecoration(
       modifier = Modifier
@@ -161,7 +161,7 @@ private fun BasicTextField(
       unfocusedBorderColor = configuration.unfocusedBorderColor,
       disabledBorderColor = configuration.disabledBorderColor,
       errorContainerColor = configuration.errorContainerColor,
-      unfocusedContainerColor = configuration.unfocusedContainerColor
+      unfocusedContainerColor = configuration.unfocusedContainerColor,
     )
   }
 }
@@ -199,7 +199,7 @@ private fun TextFieldDecoration(
           isFocused -> focusedContainerColor
           else -> unfocusedContainerColor
         },
-        shape = shape
+        shape = shape,
       )
       .border(
         width = if (isError) errorBorderWidth else borderWidth,
@@ -209,9 +209,9 @@ private fun TextFieldDecoration(
           isFocused -> focusedBorderColor
           else -> unfocusedBorderColor
         },
-        shape = shape
+        shape = shape,
       ),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     if (leadingIcon != null) {
       leadingIcon()
@@ -221,7 +221,7 @@ private fun TextFieldDecoration(
         .weight(1f)
         .heightIn(min = fieldMinHeight)
         .padding(contentPadding),
-      contentAlignment = Alignment.CenterStart
+      contentAlignment = Alignment.CenterStart,
     ) {
       if (placeholder != null) {
         placeholder()

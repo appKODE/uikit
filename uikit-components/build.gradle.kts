@@ -1,13 +1,12 @@
 plugins {
-  alias(libs.plugins.kotlinAndroid)
   alias(libs.plugins.kotlinCompose)
   alias(libs.plugins.androidLibrary)
-  `maven-publish`
+  alias(libs.plugins.vanniktech.maven.publish)
 }
 
 android {
   namespace = "ru.kode.uikit.components"
-  compileSdk = 34
+  compileSdk = 36
 
   defaultConfig {
     minSdk = 21
@@ -31,20 +30,47 @@ android {
   kotlin {
     jvmToolchain(17)
   }
-
-  publishing {
-    singleVariant("release") {
-      withSourcesJar()
-      withJavadocJar()
-    }
-  }
 }
 
-publishing {
-  publications {
-    register<MavenPublication>("release") {
-      afterEvaluate {
-        from(components["release"])
+mavenPublishing {
+  publishToMavenCentral()
+  signAllPublications()
+
+  val versionName: String by project
+  val pomGroupId: String by project
+  coordinates(pomGroupId, "uikit-components", versionName)
+
+  pom {
+    val pomDescription: String by project
+    val pomUrl: String by project
+    val pomName: String by project
+    name.set(pomName)
+    description.set(pomDescription)
+    url.set(pomUrl)
+    scm {
+      val pomScmUrl: String by project
+      val pomScmConnection: String by project
+      val pomScmDevConnection: String by project
+      url.set(pomScmUrl)
+      connection.set(pomScmConnection)
+      developerConnection.set(pomScmDevConnection)
+    }
+    licenses {
+      license {
+        val pomLicenseName: String by project
+        val pomLicenseUrl: String by project
+        val pomLicenseDist: String by project
+        name.set(pomLicenseName)
+        url.set(pomLicenseUrl)
+        distribution.set(pomLicenseDist)
+      }
+    }
+    developers {
+      developer {
+        val pomDeveloperId: String by project
+        val pomDeveloperName: String by project
+        id.set(pomDeveloperId)
+        name.set(pomDeveloperName)
       }
     }
   }

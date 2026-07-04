@@ -27,14 +27,14 @@ fun PageIndicator(
   configuration: (PageIndicatorConfiguration) -> PageIndicatorConfiguration = { it },
 ) {
   val configurationInternal by rememberUpdatedState(
-    configuration(LocalUikitConfiguration.current.pageIndicatorConfiguration)
+    configuration(LocalUikitConfiguration.current.pageIndicatorConfiguration),
   )
   Row(
     modifier = modifier
       .background(color = configurationInternal.backgroundColor, shape = configurationInternal.shape)
       .padding(configurationInternal.padding),
     horizontalArrangement = Arrangement.spacedBy(configurationInternal.spacing),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     repeat(pageCount) { i ->
       val color = if (currentPageIndex == i) {
@@ -47,8 +47,8 @@ fun PageIndicator(
           .size(configurationInternal.size)
           .background(
             color = color,
-            shape = CircleShape
-          )
+            shape = CircleShape,
+          ),
       )
     }
   }

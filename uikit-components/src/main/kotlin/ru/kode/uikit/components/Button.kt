@@ -57,12 +57,12 @@ fun Button(
         interactionSource = remember { MutableInteractionSource() },
         indication = ripple(color = rippleColor),
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
       )
       .background(backgroundColor, configuration.shape)
       .clip(configuration.shape)
       .padding(configuration.contentPadding),
-    contentAlignment = Alignment.Center
+    contentAlignment = Alignment.Center,
   ) {
     val scope = remember(configuration, colors, enabled, loading) {
       object : ButtonScope {
@@ -78,9 +78,7 @@ fun Button(
 
 object Button {
   @Composable
-  fun ButtonScope.Text(
-    text: String,
-  ) {
+  fun ButtonScope.Text(text: String) {
     val color = remember(colors, enabled) {
       if (enabled) colors.textColor else colors.disabledTextColor
     }
@@ -91,16 +89,13 @@ object Button {
       style = configuration.textStyle,
       color = color,
       maxLines = 1,
-      overflow = TextOverflow.Ellipsis
+      overflow = TextOverflow.Ellipsis,
     )
     CircularLoader(Modifier.alpha(loadingTransition.loaderAlpha.value))
   }
 
   @Composable
-  fun ButtonScope.Icon(
-    painter: Painter,
-    contentDescription: String?,
-  ) {
+  fun ButtonScope.Icon(painter: Painter, contentDescription: String?) {
     val tint = remember(colors, enabled) {
       if (enabled) colors.iconColor else colors.disabledIconColor
     }
@@ -111,7 +106,7 @@ object Button {
         .size(configuration.iconSize),
       painter = painter,
       contentDescription = contentDescription,
-      tint = tint
+      tint = tint,
     )
     CircularLoader(Modifier.alpha(loadingTransition.loaderAlpha.value))
   }
@@ -127,7 +122,7 @@ object Button {
     Row(
       modifier = Modifier.alpha(loadingTransition.contentAlpha.value),
       horizontalArrangement = Arrangement.spacedBy(configuration.contentSpacing),
-      verticalAlignment = Alignment.CenterVertically
+      verticalAlignment = Alignment.CenterVertically,
     ) {
       val iconTint = remember(colors, enabled) {
         if (enabled) colors.iconColor else colors.disabledIconColor
@@ -137,7 +132,7 @@ object Button {
           modifier = Modifier.size(configuration.iconSize),
           painter = painter,
           contentDescription = contentDescription,
-          tint = iconTint
+          tint = iconTint,
         )
       }
       val textColor = remember(colors, enabled, loading) {
@@ -152,14 +147,14 @@ object Button {
         style = configuration.textStyle,
         color = textColor,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
       )
       if (iconPosition == IconPosition.Trailing) {
         androidx.compose.material3.Icon(
           modifier = Modifier.size(configuration.iconSize),
           painter = painter,
           contentDescription = contentDescription,
-          tint = iconTint
+          tint = iconTint,
         )
       }
     }
@@ -174,12 +169,13 @@ object Button {
     CircularProgressIndicator(
       modifier = modifier.size(configuration.iconSize),
       color = color,
-      strokeWidth = configuration.loaderStrokeWidth
+      strokeWidth = configuration.loaderStrokeWidth,
     )
   }
 
   enum class IconPosition {
-    Leading, Trailing
+    Leading,
+    Trailing,
   }
 }
 
@@ -187,7 +183,7 @@ object Button {
 private fun loadingTransition(loading: Boolean): LoadingTransition {
   val loadingTransition = updateTransition(
     targetState = loading,
-    label = "loading transition"
+    label = "loading transition",
   )
   val loaderAlpha = loadingTransition.animateFloat(
     transitionSpec = {
@@ -197,7 +193,7 @@ private fun loadingTransition(loading: Boolean): LoadingTransition {
         tween(durationMillis = 90)
       }
     },
-    label = "loader alpha fraction"
+    label = "loader alpha fraction",
   ) {
     if (it) 1f else 0f
   }
@@ -209,7 +205,7 @@ private fun loadingTransition(loading: Boolean): LoadingTransition {
         tween(durationMillis = 90, delayMillis = 90)
       }
     },
-    label = "content alpha fraction"
+    label = "content alpha fraction",
   ) {
     if (it) 0f else 1f
   }
@@ -217,16 +213,13 @@ private fun loadingTransition(loading: Boolean): LoadingTransition {
   return remember {
     LoadingTransition(
       loaderAlpha = loaderAlpha,
-      contentAlpha = contentAlpha
+      contentAlpha = contentAlpha,
     )
   }
 }
 
 @Stable
-private data class LoadingTransition(
-  val loaderAlpha: State<Float>,
-  val contentAlpha: State<Float>,
-)
+private data class LoadingTransition(val loaderAlpha: State<Float>, val contentAlpha: State<Float>)
 
 @Immutable
 interface ButtonScope {
