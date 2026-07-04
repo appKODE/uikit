@@ -79,5 +79,6 @@ mavenPublishing {
 dependencies {
   implementation(libs.coroutines.android)
   implementation(libs.bundles.compose)
+  debugImplementation(libs.compose.tooling)
   coreLibraryDesugaring(libs.android.jdk.desugar)
 }

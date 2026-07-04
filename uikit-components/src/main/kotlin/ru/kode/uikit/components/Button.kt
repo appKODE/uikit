@@ -12,9 +12,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -30,6 +27,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import ru.kode.uikit.components.internal.UikitCircularLoader
+import ru.kode.uikit.components.internal.UikitIcon
+import ru.kode.uikit.components.internal.UikitText
+import ru.kode.uikit.components.internal.uikitRipple
 
 @Composable
 fun Button(
@@ -55,7 +56,7 @@ fun Button(
     modifier = modifier
       .clickable(
         interactionSource = remember { MutableInteractionSource() },
-        indication = ripple(color = rippleColor),
+        indication = uikitRipple(color = rippleColor),
         enabled = enabled,
         onClick = onClick,
       )
@@ -83,7 +84,7 @@ object Button {
       if (enabled) colors.textColor else colors.disabledTextColor
     }
     val loadingTransition = loadingTransition(loading)
-    Text(
+    UikitText(
       modifier = Modifier.alpha(loadingTransition.contentAlpha.value),
       text = text,
       style = configuration.textStyle,
@@ -100,7 +101,7 @@ object Button {
       if (enabled) colors.iconColor else colors.disabledIconColor
     }
     val loadingTransition = loadingTransition(loading)
-    androidx.compose.material3.Icon(
+    UikitIcon(
       modifier = Modifier
         .alpha(loadingTransition.contentAlpha.value)
         .size(configuration.iconSize),
@@ -128,7 +129,7 @@ object Button {
         if (enabled) colors.iconColor else colors.disabledIconColor
       }
       if (iconPosition == IconPosition.Leading) {
-        androidx.compose.material3.Icon(
+        UikitIcon(
           modifier = Modifier.size(configuration.iconSize),
           painter = painter,
           contentDescription = contentDescription,
@@ -142,7 +143,7 @@ object Button {
           else -> colors.textColor
         }
       }
-      Text(
+      UikitText(
         text = text,
         style = configuration.textStyle,
         color = textColor,
@@ -150,7 +151,7 @@ object Button {
         overflow = TextOverflow.Ellipsis,
       )
       if (iconPosition == IconPosition.Trailing) {
-        androidx.compose.material3.Icon(
+        UikitIcon(
           modifier = Modifier.size(configuration.iconSize),
           painter = painter,
           contentDescription = contentDescription,
@@ -166,7 +167,7 @@ object Button {
     val color = remember(colors, enabled) {
       if (enabled) colors.loadingIconColor else colors.disabledIconColor
     }
-    CircularProgressIndicator(
+    UikitCircularLoader(
       modifier = modifier.size(configuration.iconSize),
       color = color,
       strokeWidth = configuration.loaderStrokeWidth,
