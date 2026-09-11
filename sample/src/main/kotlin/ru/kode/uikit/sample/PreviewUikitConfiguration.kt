@@ -1,5 +1,7 @@
 package ru.kode.uikit.sample
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +21,10 @@ import ru.kode.uikit.components.InlineDatePickerConfiguration
 import ru.kode.uikit.components.ModalDatePickerConfiguration
 import ru.kode.uikit.components.PageIndicatorConfiguration
 import ru.kode.uikit.components.RadioButtonConfiguration
+import ru.kode.uikit.components.SegmentedControlContainerColors
+import ru.kode.uikit.components.SegmentedControlContainerConfiguration
+import ru.kode.uikit.components.SegmentedControlToggleColors
+import ru.kode.uikit.components.SegmentedControlToggleConfiguration
 import ru.kode.uikit.components.SliderConfiguration
 import ru.kode.uikit.components.TextFieldAreaConfiguration
 import ru.kode.uikit.components.TextFieldConfiguration
@@ -70,6 +76,8 @@ fun previewUikitConfiguration(): UikitConfiguration {
       highlightColor = Color(0xFFF5F5F5),
     ),
     datePickerConfiguration = previewDatePickerConfiguration(),
+    segmentedControlContainerConfiguration = previewSegmentedControlContainerConfiguration(),
+    segmentedControlToggleConfiguration = previewSegmentedControlToggleConfiguration(),
   )
 }
 
@@ -281,3 +289,74 @@ private fun previewDatePickerConfiguration() = DatePickerConfiguration(
     cancelButtonColor = PreviewTokens.onSurfaceVariant,
   ),
 )
+
+private fun previewSegmentedControlContainerConfiguration() = SegmentedControlContainerConfiguration(
+  cornerRadius = 9.dp,
+  colors = PreviewSegmentedControlContainerColors,
+  toggleSpacing = 2.dp,
+  colorAnimationSpec = tween(durationMillis = 200),
+)
+
+private object PreviewSegmentedControlContainerColors : SegmentedControlContainerColors {
+  override val backgroundColor = PreviewTokens.track
+  override val disabledBackgroundColor = PreviewTokens.disabledContainer
+}
+
+private fun previewSegmentedControlToggleConfiguration() = SegmentedControlToggleConfiguration(
+  selectedCornerRadius = 10.dp,
+  deselectedCornerRadius = 10.dp,
+  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+  borderWidth = 1.dp,
+  colors = PreviewSegmentedControlToggleColors,
+  colorAnimationSpec = tween(durationMillis = 200),
+  cornerRadiusAnimationSpec = tween(durationMillis = 200),
+)
+
+private object PreviewSegmentedControlToggleColors : SegmentedControlToggleColors {
+  override val selectedBackgroundColor = PreviewTokens.surface
+  override val selectedContentColor = PreviewTokens.onSurface
+  override val selectedBorderColor = PreviewTokens.primary
+  override val deselectedBackgroundColor = Color.Transparent
+  override val deselectedContentColor = PreviewTokens.onSurfaceVariant
+  override val deselectedBorderColor = Color.Transparent
+  override val disabledSelectedBackgroundColor = PreviewTokens.surface
+  override val disabledSelectedContentColor = PreviewTokens.disabled
+  override val disabledSelectedBorderColor = PreviewTokens.disabled
+  override val disabledUnselectedBackgroundColor = Color.Transparent
+  override val disabledUnselectedContentColor = PreviewTokens.disabled
+  override val disabledUnselectedBorderColor = Color.Transparent
+}
+
+/**
+ * Alternative palette used by the "transparent" previews: the container draws no track at all and
+ * deselected toggles carry the grey, so segments stay readable on a bare surface.
+ */
+object PreviewTransparentSegmentedControlContainerColors : SegmentedControlContainerColors {
+  override val backgroundColor = Color.Transparent
+  override val disabledBackgroundColor = Color.Transparent
+}
+
+fun previewTransparentSegmentedControlToggleConfiguration() = SegmentedControlToggleConfiguration(
+  selectedCornerRadius = 22.dp,
+  deselectedCornerRadius = 8.dp,
+  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+  borderWidth = 1.dp,
+  colors = PreviewGreySegmentedControlToggleColors,
+  colorAnimationSpec = tween(durationMillis = 200),
+  cornerRadiusAnimationSpec = tween(durationMillis = 200),
+)
+
+object PreviewGreySegmentedControlToggleColors : SegmentedControlToggleColors {
+  override val selectedBackgroundColor = PreviewTokens.primary
+  override val selectedContentColor = PreviewTokens.onPrimary
+  override val selectedBorderColor = PreviewTokens.primary
+  override val deselectedBackgroundColor = PreviewTokens.track
+  override val deselectedContentColor = PreviewTokens.onSurfaceVariant
+  override val deselectedBorderColor = PreviewTokens.outline
+  override val disabledSelectedBackgroundColor = PreviewTokens.disabledContainer
+  override val disabledSelectedContentColor = PreviewTokens.disabled
+  override val disabledSelectedBorderColor = PreviewTokens.disabled
+  override val disabledUnselectedBackgroundColor = PreviewTokens.disabledContainer
+  override val disabledUnselectedContentColor = PreviewTokens.disabled
+  override val disabledUnselectedBorderColor = PreviewTokens.disabled
+}
