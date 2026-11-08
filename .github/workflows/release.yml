@@ -70,3 +70,11 @@ jobs:
         run: >-
           ./gradlew --no-daemon --stacktrace --no-configuration-cache
           publishAndReleaseToMavenCentral
+
+  gh-release:
+    needs: publish-library
+    uses: appKODE/.github/.github/workflows/gh-release.yml@main
+    permissions:
+      contents: write
+    with:
+      tag-prefix: ""
