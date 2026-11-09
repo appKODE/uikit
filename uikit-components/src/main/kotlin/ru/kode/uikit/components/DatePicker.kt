@@ -57,6 +57,8 @@ fun TextFieldDatePicker(
   enabled: Boolean = true,
   error: Boolean = false,
   configuration: (DatePickerConfiguration) -> DatePickerConfiguration = { it },
+  title: @Composable (ModalDatePickerConfiguration) -> Unit = { UikitDatePickerDefaults.Title(it) },
+  headline: @Composable (LocalDate) -> Unit = { UikitDatePickerDefaults.Headline(it) },
 ) {
   val configurationInternal by rememberUpdatedState(
     configuration(LocalUikitConfiguration.current.datePickerConfiguration),
@@ -192,6 +194,8 @@ fun TextFieldDatePicker(
       },
       yearRange = state.yearRange,
       selectableDates = state.selectableDates,
+      title = title,
+      headline = headline,
     )
   }
 }
@@ -272,6 +276,8 @@ private fun ModalDatePicker(
   onDateConfirm: (LocalDate) -> Unit,
   yearRange: IntRange = UikitDatePickerDefaults.YearRange,
   selectableDates: SelectableDates = UikitDatePickerDefaults.AllDates,
+  title: @Composable (ModalDatePickerConfiguration) -> Unit = { UikitDatePickerDefaults.Title(it) },
+  headline: @Composable (LocalDate) -> Unit = { UikitDatePickerDefaults.Headline(it) },
 ) {
   val state = androidx.compose.material3.rememberDatePickerState(
     initialSelectedDateMillis = date.atStartOfDay(defaultZoneId).toInstant().toEpochMilli(),
@@ -295,41 +301,46 @@ private fun ModalDatePicker(
         .padding(horizontal = 8.dp)
         .clip(RoundedCornerShape(16.dp)),
       state = state,
-      title = {
-        Text(
-          modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
-          text = stringResource(configuration.titleRes),
-          style = TextStyle(
-            fontWeight = FontWeight.Normal,
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            letterSpacing = TextUnit(0.004f, TextUnitType.Em),
-          ),
-          color = Color(0xFF000000).copy(alpha = 0.7f),
-        )
-      },
+      title = { title(configuration) },
       headline = {
-        val formattedDate by remember {
-          derivedStateOf {
-            (state.selectedDateMillis?.toLocalDate() ?: date)
-              .format(DateTimeFormatter.ofPattern(MODAL_HEADLINE_TIME_PATTERN))
-          }
-        }
-        Text(
-          modifier = Modifier.padding(start = 24.dp, end = 12.dp, bottom = 12.dp),
-          text = formattedDate,
-          style = TextStyle(
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 28.sp,
-            lineHeight = 36.sp,
-          ),
-          color = Color(0xFF000000),
-        )
+        val shownDate by remember { derivedStateOf { state.selectedDateMillis?.toLocalDate() ?: date } }
+        headline(shownDate)
       },
       showModeToggle = false,
       colors = rememberModalDatePickerColors(configuration),
     )
   }
+}
+
+/** Default `title` slot of [TextFieldDatePicker]'s modal: the configured title. */
+@Composable
+fun UikitDatePickerDefaults.Title(configuration: ModalDatePickerConfiguration) {
+  Text(
+    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
+    text = stringResource(configuration.titleRes),
+    style = TextStyle(
+      fontWeight = FontWeight.Normal,
+      fontSize = 12.sp,
+      lineHeight = 16.sp,
+      letterSpacing = TextUnit(0.004f, TextUnitType.Em),
+    ),
+    color = Color(0xFF000000).copy(alpha = 0.7f),
+  )
+}
+
+/** Default `headline` slot of [TextFieldDatePicker]'s modal: the shown date. */
+@Composable
+fun UikitDatePickerDefaults.Headline(date: LocalDate) {
+  Text(
+    modifier = Modifier.padding(start = 24.dp, end = 12.dp, bottom = 12.dp),
+    text = date.format(DateTimeFormatter.ofPattern(MODAL_HEADLINE_TIME_PATTERN)),
+    style = TextStyle(
+      fontWeight = FontWeight.SemiBold,
+      fontSize = 28.sp,
+      lineHeight = 36.sp,
+    ),
+    color = Color(0xFF000000),
+  )
 }
 
 @Composable

@@ -23,7 +23,7 @@ allprojects {
 spotless {
   kotlin {
     target("**/*.kt")
-    targetExclude("!**/build/**/*.*")
+    targetExclude("**/build/**", ".claude/**")
     ktlint(libs.versions.ktlint.get())
       .editorConfigOverride(
         mapOf(
@@ -40,6 +40,7 @@ spotless {
 
   kotlinGradle {
     target("**/*.gradle.kts")
+    targetExclude(".claude/**")
     ktlint(libs.versions.ktlint.get())
       .editorConfigOverride(
         mapOf(

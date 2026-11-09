@@ -80,6 +80,8 @@ fun TextFieldDatePicker(
   enabled: Boolean = true,
   error: Boolean = false,
   configuration: (DatePickerConfiguration) -> DatePickerConfiguration = { it },
+  title: @Composable (ModalDatePickerConfiguration) -> Unit = { UikitDatePickerDefaults.Title(it) },
+  headline: @Composable (LocalDate) -> Unit = { UikitDatePickerDefaults.Headline(it) },
 ) {
   val configurationInternal by rememberUpdatedState(
     configuration(LocalUikitConfiguration.current.datePickerConfiguration),
@@ -213,6 +215,8 @@ fun TextFieldDatePicker(
       },
       yearRange = state.yearRange,
       selectableDates = state.selectableDates,
+      title = title,
+      headline = headline,
     )
   }
 }
@@ -292,6 +296,8 @@ private fun ModalDatePicker(
   onDateConfirm: (LocalDate) -> Unit,
   yearRange: IntRange = UikitDatePickerDefaults.YearRange,
   selectableDates: SelectableDates = UikitDatePickerDefaults.AllDates,
+  title: @Composable (ModalDatePickerConfiguration) -> Unit = { UikitDatePickerDefaults.Title(it) },
+  headline: @Composable (LocalDate) -> Unit = { UikitDatePickerDefaults.Headline(it) },
 ) {
   val locale = Locale.getDefault()
   var displayedMonth by remember { mutableStateOf(YearMonth.from(date)) }
@@ -314,23 +320,9 @@ private fun ModalDatePicker(
           modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 120.dp),
           verticalArrangement = Arrangement.SpaceBetween,
         ) {
-          Box(contentAlignment = Alignment.BottomStart) {
-            UikitText(
-              modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
-              text = stringResource(configuration.titleRes),
-              style = TitleTextStyle,
-              color = Color(0xFF000000).copy(alpha = 0.7f),
-            )
-          }
+          Box(contentAlignment = Alignment.BottomStart) { title(configuration) }
           Column(Modifier.fillMaxWidth()) {
-            Box(Modifier.fillMaxWidth()) {
-              UikitText(
-                modifier = Modifier.padding(start = 24.dp, end = 12.dp, bottom = 12.dp),
-                text = date.format(DateTimeFormatter.ofPattern(MODAL_HEADLINE_TIME_PATTERN)),
-                style = HeadlineTextStyle,
-                color = Color(0xFF000000),
-              )
-            }
+            Box(Modifier.fillMaxWidth()) { headline(date) }
             Divider(configuration.dividerColor)
           }
         }
@@ -372,6 +364,28 @@ private fun ModalDatePicker(
       }
     }
   }
+}
+
+/** Default `title` slot of [TextFieldDatePicker]'s modal: the configured title. */
+@Composable
+fun UikitDatePickerDefaults.Title(configuration: ModalDatePickerConfiguration) {
+  UikitText(
+    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
+    text = stringResource(configuration.titleRes),
+    style = TitleTextStyle,
+    color = Color(0xFF000000).copy(alpha = 0.7f),
+  )
+}
+
+/** Default `headline` slot of [TextFieldDatePicker]'s modal: the shown date. */
+@Composable
+fun UikitDatePickerDefaults.Headline(date: LocalDate) {
+  UikitText(
+    modifier = Modifier.padding(start = 24.dp, end = 12.dp, bottom = 12.dp),
+    text = date.format(DateTimeFormatter.ofPattern(MODAL_HEADLINE_TIME_PATTERN)),
+    style = HeadlineTextStyle,
+    color = Color(0xFF000000),
+  )
 }
 
 @Composable
