@@ -5,6 +5,8 @@ import androidx.compose.runtime.compositionLocalOf
 import ru.kode.uikit.components.BottomSheetConfiguration
 import ru.kode.uikit.components.ButtonColors
 import ru.kode.uikit.components.ButtonConfiguration
+import ru.kode.uikit.components.CellConfiguration
+import ru.kode.uikit.components.CellContainerConfiguration
 import ru.kode.uikit.components.CheckboxConfiguration
 import ru.kode.uikit.components.DatePickerConfiguration
 import ru.kode.uikit.components.PageIndicatorConfiguration
@@ -27,6 +29,8 @@ data class UikitConfiguration(
   val sliderConfiguration: SliderConfiguration,
   val shimmerConfiguration: ShimmerConfiguration,
   val datePickerConfiguration: DatePickerConfiguration,
+  val cellContainerConfiguration: CellContainerConfiguration,
+  val cellConfiguration: CellConfiguration
 )
 
 val LocalUikitConfiguration = compositionLocalOf<UikitConfiguration> {

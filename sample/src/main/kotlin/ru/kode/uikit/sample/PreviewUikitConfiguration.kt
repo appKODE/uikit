@@ -13,6 +13,10 @@ import androidx.compose.ui.unit.sp
 import ru.kode.uikit.components.BottomSheetConfiguration
 import ru.kode.uikit.components.ButtonColors
 import ru.kode.uikit.components.ButtonConfiguration
+import ru.kode.uikit.components.CellColors
+import ru.kode.uikit.components.CellConfiguration
+import ru.kode.uikit.components.CellContainerColors
+import ru.kode.uikit.components.CellContainerConfiguration
 import ru.kode.uikit.components.CheckboxConfiguration
 import ru.kode.uikit.components.DatePickerConfiguration
 import ru.kode.uikit.components.InlineDatePickerConfiguration
@@ -70,6 +74,8 @@ fun previewUikitConfiguration(): UikitConfiguration {
       highlightColor = Color(0xFFF5F5F5),
     ),
     datePickerConfiguration = previewDatePickerConfiguration(),
+    cellContainerConfiguration = previewCellContainerConfiguration(),
+    cellConfiguration = previewCellConfiguration(),
   )
 }
 
@@ -207,6 +213,29 @@ private fun previewSliderConfiguration() = SliderConfiguration(
   disabledThumbBorderColor = PreviewTokens.onPrimary,
   disabledActiveTrackColor = PreviewTokens.disabled,
   disabledInactiveTrackColor = PreviewTokens.disabledContainer,
+)
+
+private fun previewCellContainerConfiguration() = CellContainerConfiguration(
+  shape = RoundedCornerShape(12.dp),
+  colors = object : CellContainerColors {
+    override val backgroundColor = PreviewTokens.surface
+    override val dividerColor = PreviewTokens.outline
+  },
+  dividerThickness = 1.dp,
+  dividerPadding = PaddingValues(start = 16.dp),
+)
+
+private fun previewCellConfiguration() = CellConfiguration(
+  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+  contentSpacing = 12.dp,
+  colors = object : CellColors {
+    override val backgroundColor = PreviewTokens.surface
+    override val contentColor = PreviewTokens.onSurface
+    override val chevronColor = PreviewTokens.onSurfaceVariant
+    override val disabledBackgroundColor = PreviewTokens.disabledContainer
+    override val disabledContentColor = PreviewTokens.disabled
+    override val disabledChevronColor = PreviewTokens.disabled
+  },
 )
 
 private fun previewDatePickerConfiguration() = DatePickerConfiguration(
