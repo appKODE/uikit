@@ -64,7 +64,7 @@ jobs:
             echo "signing.secretKeyRingFile=${keyring_file}"
           } >> "${HOME}/.gradle/gradle.properties"
 
-      # Publishes ru.kode.uikit:uikit-components to Maven Central (Central Portal) via the
+      # Publishes ru.kode.uikit:uikit-core, uikit-components and uikit-components-foundation to Maven Central (Central Portal) via the
       # vanniktech maven-publish plugin. The version is taken from `versionName` in gradle.properties.
       - name: Publish library to Maven Central
         run: >-

@@ -8,5 +8,7 @@ pluginManagement {
   }
 }
 
+include(":uikit-core")
 include(":uikit-components")
+include(":uikit-components-foundation")
 include(":sample")

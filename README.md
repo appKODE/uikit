@@ -6,9 +6,11 @@ A library of commonly used UI components built on [Jetpack Compose](https://deve
 
 ## Usage
 
-Add the dependency:
+Add the dependency for **one** backend (see [Choose a backend](#choose-a-backend)):
 ```groovy
-implementation "ru.kode.uikit:uikit-components:$version"
+implementation "ru.kode.uikit:uikit-components:$version"            // Material3 backend
+// or
+implementation "ru.kode.uikit:uikit-components-foundation:$version" // Compose Foundation backend
 ```
 Set up the configuration. It's best to do this as high in the component hierarchy as possible
 (app theme, Activity):
@@ -23,6 +25,32 @@ CompositionLocalProvider(
 }
 ```
 That completes the setup — you can now use any of the components.
+
+## Choose a backend
+The library ships as three artifacts:
+
+| Artifact | Contains | Depends on |
+|---|---|---|
+| `uikit-core` | configuration, shared state types, `TextField`, `TextFieldArea`, `PageIndicator`, shimmer | Compose UI/Foundation |
+| `uikit-components` | Material3 backend: `Button`, `Checkbox`, `RadioButton`, sliders, `DatePicker`, `ModalBottomSheet` | `uikit-core`, Material3 |
+| `uikit-components-foundation` | the same components, drawn with Compose Foundation | `uikit-core`, `material-ripple` |
+
+Both backends expose the same API in `ru.kode.uikit.components`, so switching is a one-line dependency change.
+Depend on exactly one: adding both fails the build with duplicate classes. `uikit-core` comes in transitively.
+
+Pick `uikit-components` if your app already uses Material3, or you need Material3's exact look.
+Pick `uikit-components-foundation` to keep Material3 out of your APK. It renders the same as the Material3
+backend (CI checks both against the same screenshots); see the CHANGELOG for the few known differences.
+
+To change one visual part without forking, override its slot. Slots work the same on both backends:
+```kotlin
+Checkbox(checked = checked, onClick = onClick, box = { state -> MyCheckboxBox(state.checked, state.enabled) })
+ModalBottomSheet(onDismissRequest = onDismiss, dragHandle = null) { /* content */ }
+```
+Available slots: `Checkbox.box`, `RadioButton.indicator`, the sliders' `thumb`/`track`,
+`Button.loadingIndicator`, `ModalBottomSheet.dragHandle` and `TextFieldDatePicker.title`/`headline`. Their
+defaults are in `UikitCheckboxDefaults`, `UikitRadioButtonDefaults`, `UikitButtonDefaults`,
+`UikitBottomSheetDefaults` and `UikitDatePickerDefaults`.
 
 ## Components
 - Button
@@ -76,9 +104,6 @@ The workflow runs `./gradlew publishAndReleaseToMavenCentral`. It requires the f
 To verify the artifact build locally: `./gradlew publishToMavenLocal`.
 
 See [CHANGELOG.md](CHANGELOG.md) for the release history.
-
-## TODO
-- Remove the dependency on Material3
 
 [mavenbadge-svg]: https://maven-badges.herokuapp.com/maven-central/ru.kode.uikit/uikit-components/badge.svg
 [mavencentral]: https://mvnrepository.com/artifact/ru.kode.uikit/uikit-components

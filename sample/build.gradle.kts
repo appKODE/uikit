@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.kotlinCompose)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -15,6 +16,18 @@ android {
     targetSdk = 36
     versionCode = 1
     versionName = "1.0"
+  }
+
+  // One sample per backend; both read/write the same goldens in src/test/snapshots, so
+  // verifyRoborazziFoundationDebug checks foundation against goldens recorded on material3.
+  flavorDimensions += "backend"
+  productFlavors {
+    create("material3") { dimension = "backend" }
+    create("foundation") { dimension = "backend" }
+  }
+
+  testOptions {
+    unitTests.isIncludeAndroidResources = true
   }
 
   buildFeatures {
@@ -33,8 +46,12 @@ android {
 }
 
 dependencies {
-  implementation(project(":uikit-components"))
+  "material3Implementation"(project(":uikit-components"))
+  "foundationImplementation"(project(":uikit-components-foundation"))
   implementation(libs.bundles.compose)
+  // The foundation backend has no M3; the sample still uses it for its own theme/scaffolding and previews.
+  implementation(libs.compose.material3)
+  implementation(libs.compose.tooling)
   implementation(libs.androidx.activity.compose)
 
   implementation(libs.showkase)
@@ -42,4 +59,13 @@ dependencies {
   ksp(libs.showkase.processor)
 
   coreLibraryDesugaring(libs.android.jdk.desugar)
+
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.roborazzi)
+  testImplementation(libs.roborazzi.compose)
+  testImplementation(libs.roborazzi.junit.rule)
+  testImplementation(libs.composable.preview.scanner)
+  testImplementation(libs.compose.ui.test.junit4)
+  debugImplementation(libs.compose.ui.test.manifest)
 }

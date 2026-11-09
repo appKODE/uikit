@@ -4,7 +4,6 @@ agp = "9.2.1"
 coroutines = "1.11.0"
 compose = "1.11.4"
 composeMaterial3 = "1.4.0"
-accompanist = "0.36.0"
 spotless = "8.8.0"
 ktlint = "1.8.0"
 androidJdkDesugar = "2.1.5"
@@ -12,27 +11,39 @@ vanniktechMavenPublish = "0.37.0"
 ksp = "2.3.9"
 showkase = "1.0.5"
 activityCompose = "1.13.0"
+roborazzi = "1.78.0"
+robolectric = "4.17"
+composablePreviewScanner = "0.10.0"
+junit = "4.13.2"
 
 [libraries]
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
-accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder", version.ref = "accompanist" }
+compose-material-ripple = { module = "androidx.compose.material:material-ripple", version.ref = "compose" }
 android-jdk-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidJdkDesugar" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 showkase = { module = "com.airbnb.android:showkase", version.ref = "showkase" }
 showkase-annotation = { module = "com.airbnb.android:showkase-annotation", version.ref = "showkase" }
 showkase-processor = { module = "com.airbnb.android:showkase-processor", version.ref = "showkase" }
+roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "roborazzi" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+composable-preview-scanner = { module = "io.github.sergio-sastre.ComposablePreviewScanner:android", version.ref = "composablePreviewScanner" }
+junit = { module = "junit:junit", version.ref = "junit" }
+compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 
 [bundles]
 compose = [
   "compose-ui",
-  "compose-tooling",
   "compose-runtime",
-  "compose-material3",
-  "accompanist-placeholder"
+  "compose-foundation",
+  "compose-material-ripple"
 ]
 
 [plugins]
@@ -42,3 +53,4 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }

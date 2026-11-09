@@ -13,15 +13,13 @@ import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import ru.kode.uikit.components.configuration.LocalUikitConfiguration
 
 @Composable
@@ -32,15 +30,15 @@ fun RangeSlider(
   enabled: Boolean = true,
   valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
   configuration: (SliderConfiguration) -> SliderConfiguration = { it },
-  startThumb: @Composable (RangeSliderState) -> Unit = {
+  startThumb: @Composable (UikitRangeSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Thumb(config, enabled)
   },
-  endThumb: @Composable (RangeSliderState) -> Unit = {
+  endThumb: @Composable (UikitRangeSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Thumb(config, enabled)
   },
-  track: @Composable (RangeSliderState) -> Unit = {
+  track: @Composable (UikitRangeSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Track(config, it, enabled)
   },
@@ -52,9 +50,9 @@ fun RangeSlider(
     onValueChange = onValueChange,
     enabled = enabled,
     valueRange = valueRange,
-    startThumb = startThumb,
-    endThumb = endThumb,
-    track = track,
+    startThumb = { startThumb(it.toUikit()) },
+    endThumb = { endThumb(it.toUikit()) },
+    track = { CompositionLocalProvider(LocalMaterialRangeSliderState provides it) { track(it.toUikit()) } },
     steps = steps,
   )
 }
@@ -67,11 +65,11 @@ fun MinSlider(
   enabled: Boolean = true,
   @IntRange(from = 0) steps: Int = 0,
   configuration: (SliderConfiguration) -> SliderConfiguration = { it },
-  thumb: @Composable (SliderState) -> Unit = {
+  thumb: @Composable (UikitSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Thumb(config, enabled)
   },
-  track: @Composable (SliderState) -> Unit = {
+  track: @Composable (UikitSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Track(config, Slider.Direction.Min, it, enabled)
   },
@@ -83,8 +81,8 @@ fun MinSlider(
     onValueChange = onValueChange,
     enabled = enabled,
     steps = steps,
-    thumb = thumb,
-    track = track,
+    thumb = { thumb(it.toUikit()) },
+    track = { CompositionLocalProvider(LocalMaterialSliderState provides it) { track(it.toUikit()) } },
     valueRange = valueRange,
   )
 }
@@ -97,11 +95,11 @@ fun MaxSlider(
   enabled: Boolean = true,
   @IntRange(from = 0) steps: Int = 0,
   configuration: (SliderConfiguration) -> SliderConfiguration = { it },
-  thumb: @Composable (SliderState) -> Unit = {
+  thumb: @Composable (UikitSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Thumb(config, enabled)
   },
-  track: @Composable (SliderState) -> Unit = {
+  track: @Composable (UikitSliderState) -> Unit = {
     val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.sliderConfiguration))
     Slider.Track(config, Slider.Direction.Max, it, enabled)
   },
@@ -113,8 +111,8 @@ fun MaxSlider(
     onValueChange = onValueChange,
     enabled = enabled,
     steps = steps,
-    thumb = thumb,
-    track = track,
+    thumb = { thumb(it.toUikit()) },
+    track = { CompositionLocalProvider(LocalMaterialSliderState provides it) { track(it.toUikit()) } },
     valueRange = valueRange,
   )
 }
@@ -150,7 +148,12 @@ object Slider {
   }
 
   @Composable
-  fun Track(configuration: SliderConfiguration, direction: Direction, state: SliderState, enabled: Boolean = true) {
+  fun Track(
+    configuration: SliderConfiguration,
+    direction: Direction,
+    state: UikitSliderState,
+    enabled: Boolean = true,
+  ) {
     val inactiveTrackColor = remember(configuration, direction) {
       when (direction) {
         Direction.Min -> configuration.activeTrackColor
@@ -196,7 +199,8 @@ object Slider {
     }
     SliderDefaults.Track(
       modifier = Modifier.height(configuration.trackHeight),
-      sliderState = state,
+      sliderState = LocalMaterialSliderState.current
+        ?: remember(state.value, state.steps, state.valueRange) { state.toMaterial() },
       enabled = enabled,
       colors = colors,
       thumbTrackGapSize = configuration.thumbTrackGapSize,
@@ -205,7 +209,7 @@ object Slider {
   }
 
   @Composable
-  fun Track(configuration: SliderConfiguration, state: RangeSliderState, enabled: Boolean = true) {
+  fun Track(configuration: SliderConfiguration, state: UikitRangeSliderState, enabled: Boolean = true) {
     val colors = remember(configuration) {
       SliderColors(
         thumbColor = Color.Unspecified,
@@ -222,7 +226,10 @@ object Slider {
     }
     SliderDefaults.Track(
       modifier = Modifier.height(configuration.trackHeight),
-      rangeSliderState = state,
+      rangeSliderState = LocalMaterialRangeSliderState.current
+        ?: remember(state.activeRangeStart, state.activeRangeEnd, state.steps, state.valueRange) {
+          state.toMaterial()
+        },
       enabled = enabled,
       colors = colors,
       thumbTrackGapSize = configuration.thumbTrackGapSize,
@@ -236,20 +243,21 @@ object Slider {
   }
 }
 
-@Immutable
-data class SliderConfiguration(
-  val thumbSize: DpSize,
-  val thumbBorderWidth: Dp,
-  val thumbTrackGapSize: Dp,
-  val trackHeight: Dp,
-  val trackShape: Shape,
-  val trackInsideCornerSize: Dp,
-  val thumbColor: Color,
-  val thumbBorderColor: Color,
-  val activeTrackColor: Color,
-  val inactiveTrackColor: Color,
-  val disabledThumbColor: Color,
-  val disabledThumbBorderColor: Color,
-  val disabledActiveTrackColor: Color,
-  val disabledInactiveTrackColor: Color,
+// M3 lays out thumb width/ticks on its own state; a rebuilt state lacks them (no thumb gap),
+// so the default Track reads the live one when called inside an M3 slider.
+private val LocalMaterialSliderState = compositionLocalOf<SliderState?> { null }
+private val LocalMaterialRangeSliderState = compositionLocalOf<RangeSliderState?> { null }
+
+// The public API speaks the backend-neutral core states; M3 states stay an implementation detail.
+private fun SliderState.toUikit() = UikitSliderState(value, valueRange, steps)
+
+private fun RangeSliderState.toUikit() = UikitRangeSliderState(activeRangeStart, activeRangeEnd, valueRange, steps)
+
+private fun UikitSliderState.toMaterial() = SliderState(value = value, steps = steps, valueRange = valueRange)
+
+private fun UikitRangeSliderState.toMaterial() = RangeSliderState(
+  activeRangeStart = activeRangeStart,
+  activeRangeEnd = activeRangeEnd,
+  steps = steps,
+  valueRange = valueRange,
 )
