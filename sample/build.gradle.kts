@@ -40,6 +40,9 @@ android {
 dependencies {
   implementation(project(":uikit-components"))
   implementation(libs.bundles.compose)
+  // The library dropped M3; the sample still uses it for its own theme/scaffolding and previews.
+  implementation(libs.compose.material3)
+  implementation(libs.compose.tooling)
   implementation(libs.androidx.activity.compose)
 
   implementation(libs.showkase)
