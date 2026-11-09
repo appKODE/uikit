@@ -1,8 +1,10 @@
 package ru.kode.uikit.components.internal
 
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -26,6 +28,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -144,29 +147,68 @@ private fun Size.isInfinite() = width.isInfinite() && height.isInfinite()
 private val DefaultIconSizeModifier = Modifier.size(24.dp)
 
 /**
- * Foundation-only replacement for `androidx.compose.material3.CircularProgressIndicator`. Draws an
- * indeterminate spinner: a rounded 270° arc rotating continuously. Size comes from [modifier].
+ * Foundation-only replacement for `androidx.compose.material3.CircularProgressIndicator` (indeterminate):
+ * a port of the Material 3 1.4 drawing and animation specs. Size comes from [modifier].
  */
 @Composable
 internal fun UikitCircularLoader(color: Color, strokeWidth: Dp, modifier: Modifier = Modifier) {
   val transition = rememberInfiniteTransition(label = "circular-loader")
-  val rotation by transition.animateFloat(
+  val globalRotation by transition.animateFloat(
+    initialValue = 0f,
+    targetValue = 1080f,
+    animationSpec = infiniteRepeatable(tween(LOADER_DURATION, easing = LinearEasing)),
+    label = "global-rotation",
+  )
+  val additionalRotation by transition.animateFloat(
     initialValue = 0f,
     targetValue = 360f,
-    animationSpec = infiniteRepeatable(tween(durationMillis = 900, easing = LinearEasing)),
-    label = "rotation",
+    animationSpec = infiniteRepeatable(
+      keyframes {
+        durationMillis = LOADER_DURATION
+        90f at LOADER_ROTATION_DURATION using EmphasizedDecelerate
+        90f at LOADER_ROTATION_DELAY
+        180f at LOADER_ROTATION_DURATION + LOADER_ROTATION_DELAY
+        180f at LOADER_ROTATION_DELAY * 2
+        270f at LOADER_ROTATION_DURATION + LOADER_ROTATION_DELAY * 2
+        270f at LOADER_ROTATION_DELAY * 3
+        360f at LOADER_ROTATION_DURATION + LOADER_ROTATION_DELAY * 3
+        360f at LOADER_DURATION
+      },
+    ),
+    label = "additional-rotation",
   )
-  Canvas(modifier) {
-    val sw = strokeWidth.toPx()
-    val inset = sw / 2f
-    drawArc(
-      color = color,
-      startAngle = rotation,
-      sweepAngle = 270f,
-      useCenter = false,
-      topLeft = Offset(inset, inset),
-      size = Size(size.width - sw, size.height - sw),
-      style = Stroke(width = sw, cap = StrokeCap.Round),
-    )
+  val progress by transition.animateFloat(
+    initialValue = LOADER_MIN_PROGRESS,
+    targetValue = LOADER_MAX_PROGRESS,
+    animationSpec = infiniteRepeatable(
+      keyframes {
+        durationMillis = LOADER_DURATION
+        LOADER_MAX_PROGRESS at LOADER_DURATION / 2 using CubicBezierEasing(0.2f, 0f, 0f, 1f)
+        LOADER_MIN_PROGRESS at LOADER_DURATION
+      },
+    ),
+    label = "progress",
+  )
+  Canvas(modifier.size(40.dp)) {
+    val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
+    val inset = stroke.width / 2
+    rotate(globalRotation + additionalRotation) {
+      drawArc(
+        color = color,
+        startAngle = 0f,
+        sweepAngle = progress * 360f,
+        useCenter = false,
+        topLeft = Offset(inset, inset),
+        size = Size(size.width - stroke.width, size.width - stroke.width),
+        style = stroke,
+      )
+    }
   }
 }
+
+private val EmphasizedDecelerate = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1f)
+private const val LOADER_DURATION = 6000
+private const val LOADER_ROTATION_DELAY = 1500
+private const val LOADER_ROTATION_DURATION = 300
+private const val LOADER_MIN_PROGRESS = 0.1f
+private const val LOADER_MAX_PROGRESS = 0.87f

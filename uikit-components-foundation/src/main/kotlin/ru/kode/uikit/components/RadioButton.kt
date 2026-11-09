@@ -1,17 +1,20 @@
 package ru.kode.uikit.components
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
@@ -48,29 +51,27 @@ fun RadioButton(
       .then(selectableModifier)
       .padding(config.contentPadding)
       .size(config.size),
+    contentAlignment = Alignment.Center,
   ) {
     indicator(state)
   }
 }
 
 object UikitRadioButtonDefaults {
-  /** Default `indicator` slot: a ring with an animated center dot. */
+  /** Default `indicator` slot: a port of the Material 3 radio button drawing with [RadioButtonConfiguration] colors. */
   @Composable
   fun Indicator(state: RadioButtonSlotState) {
-    val config = state.configuration
     val ringColor = state.ringColor()
-    val dotColor = when {
-      !state.enabled -> config.disabledSelectedColor
-      state.error -> config.errorSelectedColor
-      else -> config.selectedColor
-    }
-    val dotFraction by animateFloatAsState(if (state.selected) 1f else 0f, label = "radio-dot")
-    Canvas(Modifier.fillMaxSize()) {
-      val stroke = RadioStrokeWidth.toPx()
-      val outerRadius = (size.minDimension - stroke) / 2f
-      drawCircle(color = ringColor, radius = outerRadius, style = Stroke(width = stroke))
-      if (dotFraction > 0f) {
-        drawCircle(color = dotColor, radius = size.minDimension * MAX_DOT_RADIUS_FRACTION * dotFraction)
+    val dotRadius by animateDpAsState(
+      targetValue = if (state.selected) RadioDotSize / 2 else 0.dp,
+      animationSpec = spring(0.9f, 1400f),
+      label = "radio-dot",
+    )
+    Canvas(Modifier.wrapContentSize(Alignment.Center).padding(2.dp).requiredSize(RadioIconSize)) {
+      val strokeWidth = RadioStrokeWidth.toPx()
+      drawCircle(ringColor, radius = (RadioIconSize / 2).toPx() - strokeWidth / 2, style = Stroke(strokeWidth))
+      if (dotRadius > 0.dp) {
+        drawCircle(ringColor, dotRadius.toPx() - strokeWidth / 2)
       }
     }
   }
@@ -83,4 +84,5 @@ private fun RadioButtonSlotState.ringColor() = when {
 }
 
 private val RadioStrokeWidth = 2.dp
-private const val MAX_DOT_RADIUS_FRACTION = 0.25f
+private val RadioIconSize = 20.dp
+private val RadioDotSize = 12.dp

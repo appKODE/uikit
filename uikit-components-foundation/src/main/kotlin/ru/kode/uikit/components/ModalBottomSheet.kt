@@ -1,5 +1,6 @@
 package ru.kode.uikit.components
 
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 import kotlinx.coroutines.launch
 import ru.kode.uikit.components.configuration.LocalUikitConfiguration
 import kotlin.math.roundToInt
@@ -68,6 +72,16 @@ fun ModalBottomSheet(
       decorFitsSystemWindows = false,
     ),
   ) {
+    // Match the Material3 sheet window: full-screen, no platform dim (the scrim below is the only dim).
+    val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window
+    SideEffect {
+      dialogWindow?.setDimAmount(0f)
+      dialogWindow?.setLayout(MATCH_PARENT, MATCH_PARENT)
+    }
+    val sheetShape = RoundedCornerShape(
+      topStart = configurationInternal.cornerRadius,
+      topEnd = configurationInternal.cornerRadius,
+    )
     val scrimFraction = if (sheetHeight > 0f) (1f - offsetY.value / sheetHeight).coerceIn(0f, 1f) else 0f
     Box(modifier.fillMaxSize()) {
       Box(
@@ -121,13 +135,9 @@ fun ModalBottomSheet(
               }
             },
           )
-          .clip(
-            RoundedCornerShape(
-              topStart = configurationInternal.cornerRadius,
-              topEnd = configurationInternal.cornerRadius,
-            ),
-          )
-          .background(configurationInternal.backgroundColor),
+          // Shape-aware background then clip, like Material3 Surface (identical corner anti-aliasing).
+          .background(configurationInternal.backgroundColor, sheetShape)
+          .clip(sheetShape),
       ) {
         dragHandle?.invoke()
         sheetContent()
