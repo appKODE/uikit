@@ -2,16 +2,27 @@
 
 [![Maven Central][mavenbadge-svg]][mavencentral]
 
-A library of commonly used UI components built on [Jetpack Compose](https://developer.android.com/compose).
+A library of commonly used UI components built on [Jetpack Compose](https://developer.android.com/compose)
+and [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/).
+
+| Target | Compose | Material3 backend uses |
+|---|---|---|
+| Android | Jetpack Compose | androidx Material3 |
+| iOS (`iosArm64`, `iosSimulatorArm64`) | Compose Multiplatform | Compose Multiplatform Material3 |
+| JVM desktop | Compose Multiplatform | Compose Multiplatform Material3 |
+| Web (`js`, `wasmJs`) | Compose Multiplatform | Compose Multiplatform Material3 |
 
 ## Usage
 
-Add the dependency for **one** backend (see [Choose a backend](#choose-a-backend)):
+Add the dependency for **one** backend (see [Choose a backend](#choose-a-backend)) — to an Android module's
+`dependencies`, or to `commonMain.dependencies` in a Kotlin Multiplatform module:
 ```groovy
 implementation "ru.kode.uikit:uikit-components:$version"            // Material3 backend
 // or
 implementation "ru.kode.uikit:uikit-components-foundation:$version" // Compose Foundation backend
 ```
+Android apps with `minSdk < 26` need [core library desugaring](https://developer.android.com/studio/write/java8-support#library-desugaring)
+enabled: dates are `kotlinx.datetime.LocalDate`, which uses `java.time` on Android.
 Set up the configuration. It's best to do this as high in the component hierarchy as possible
 (app theme, Activity):
 ```kotlin
@@ -26,13 +37,24 @@ CompositionLocalProvider(
 ```
 That completes the setup — you can now use any of the components.
 
+Icons and texts in the date picker configuration are composable lambdas, so they work with any resource system:
+```kotlin
+// Android resources
+TextFieldDatePickerConfiguration(leadingIcon = { painterResource(R.drawable.ic_calendar) }, /* … */)
+ModalDatePickerConfiguration(title = { stringResource(R.string.pick_date) }, /* … */)
+// Compose Multiplatform resources (org.jetbrains.compose.resources)
+TextFieldDatePickerConfiguration(leadingIcon = { painterResource(Res.drawable.ic_calendar) }, /* … */)
+ModalDatePickerConfiguration(title = { stringResource(Res.string.pick_date) }, /* … */)
+```
+The library itself does not depend on Compose Multiplatform resources.
+
 ## Choose a backend
 The library ships as three artifacts:
 
 | Artifact | Contains | Depends on |
 |---|---|---|
-| `uikit-core` | configuration, shared state types, `TextField`, `TextFieldArea`, `PageIndicator`, shimmer | Compose UI/Foundation |
-| `uikit-components` | Material3 backend: `Button`, `Checkbox`, `RadioButton`, sliders, `DatePicker`, `ModalBottomSheet` | `uikit-core`, Material3 |
+| `uikit-core` | configuration, shared state types, `TextField`, `TextFieldArea`, `PageIndicator`, shimmer | Compose UI/Foundation, kotlinx-datetime |
+| `uikit-components` | Material3 backend: `Button`, `Checkbox`, `RadioButton`, sliders, `DatePicker`, `ModalBottomSheet` | `uikit-core`, Material3 (androidx on Android, Compose Multiplatform elsewhere) |
 | `uikit-components-foundation` | the same components, drawn with Compose Foundation | `uikit-core`, `material-ripple` |
 
 Both backends expose the same API in `ru.kode.uikit.components`, so switching is a one-line dependency change.
@@ -97,7 +119,7 @@ Releases run automatically through GitHub Actions (`.github/workflows/release.ym
 git tag 0.1.3
 git push origin 0.1.3
 ```
-The workflow runs `./gradlew publishAndReleaseToMavenCentral`. It requires the following secrets in the
+The workflow runs `./gradlew publishAndReleaseToMavenCentral` on macOS (iOS klibs only build there). It requires the following secrets in the
 `release` environment: `NEXUS_USERTOKEN_NAME`, `NEXUS_USERTOKEN_PASSWORD`, `SIGNING_KEY_ID`,
 `SIGNING_PASSWORD`, `SIGNING_SECRET_KEY_RING_FILE_BASE64`.
 

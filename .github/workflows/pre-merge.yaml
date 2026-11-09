@@ -26,7 +26,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Check formatting and assemble
-        run: ./gradlew spotlessCheck :uikit-core:assembleRelease :uikit-components:assembleRelease :uikit-components-foundation:assembleRelease --continue
+        run: >-
+          ./gradlew spotlessCheck --continue
+          :uikit-core:assemble :uikit-components:assemble :uikit-components-foundation:assemble
+
+      - name: Test (JVM)
+        run: ./gradlew :uikit-core:jvmTest
 
       # Both flavors compare against the same goldens in sample/src/test/snapshots.
       - name: Verify screenshots (Material3 backend)
@@ -45,3 +50,26 @@ jobs:
             **/build/reports/
             sample/build/outputs/roborazzi/
           if-no-files-found: warn
+
+  ios:
+    runs-on: macos-latest
+    if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Compile iOS and run iOS tests
+        run: >-
+          ./gradlew
+          :uikit-core:iosSimulatorArm64Test
+          :uikit-components:compileKotlinIosSimulatorArm64
+          :uikit-components-foundation:compileKotlinIosSimulatorArm64

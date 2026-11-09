@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Defaults live in `UikitCheckboxDefaults`, `UikitRadioButtonDefaults`, `UikitButtonDefaults`,
   `UikitBottomSheetDefaults` and `UikitDatePickerDefaults.Title` / `.Headline`.
 - Both backends render pixel-identically; CI verifies each against the same screenshot goldens.
+- Kotlin Multiplatform: all three artifacts now publish for Android, iOS (`iosArm64`, `iosSimulatorArm64`),
+  JVM desktop, `js` and `wasmJs`. Android consumers keep the same coordinates; Gradle module metadata picks the
+  Android variant.
+- The Material3 backend uses androidx Material3 1.4.0 on Android (unchanged) and JetBrains Compose
+  Multiplatform Material3 on the other targets. The foundation backend is pure Compose Foundation everywhere.
 
 ### Changed (breaking)
 - `Slider`: the `thumb`/`track`/`startThumb`/`endThumb` slot lambdas now receive the library's own
@@ -29,6 +34,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `DatePicker`: `rememberDatePickerState(selectableDates = …)` and `DatePickerState.selectableDates` now use
   the library's own `SelectableDates` interface (with `UikitDatePickerDefaults.AllDates` / `.YearRange`)
   instead of Material3's `SelectableDates` / `DatePickerDefaults`.
+- Dates are `kotlinx.datetime.LocalDate` instead of `java.time.LocalDate`: `rememberDatePickerState`,
+  `DatePickerState.selectedDate`, `onDateConfirm`, the `headline` slot and `UikitDatePickerDefaults.Headline`.
+- Android resource ids in the date picker configuration are replaced by composable lambdas:
+  `TextFieldDatePickerConfiguration.leadingIcon/trailingIcon/errorIcon`, `InlineDatePickerConfiguration.icon`
+  (`@Composable () -> Painter`) and `ModalDatePickerConfiguration.title/confirmButtonText/cancelButtonText`
+  (`@Composable () -> String`). Migration:
+  ```kotlin
+  // before
+  TextFieldDatePickerConfiguration(leadingIconRes = R.drawable.ic_calendar, /* … */)
+  ModalDatePickerConfiguration(titleRes = R.string.pick_date, /* … */)
+  rememberDatePickerState(initialSelectedDate = java.time.LocalDate.of(2026, 1, 15))
+  // after
+  TextFieldDatePickerConfiguration(leadingIcon = { painterResource(R.drawable.ic_calendar) }, /* … */)
+  ModalDatePickerConfiguration(title = { stringResource(R.string.pick_date) }, /* … */)
+  rememberDatePickerState(initialSelectedDate = kotlinx.datetime.LocalDate(2026, 1, 15))
+  ```
 
 ### Deprecated
 - `ModalBottomSheet(showHandle = …)`: use `dragHandle` (`null` hides the handle).
@@ -38,6 +59,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   an explicit color renders black inside it.
 - The foundation sliders size the thumb gap from `SliderConfiguration`, not from a custom `thumb` slot, and draw
   no step ticks (the Material3 backend draws none with the current configuration either).
+
+### Notes
+- The libraries no longer enable core library desugaring themselves. kotlinx-datetime uses `java.time` on
+  Android, so apps with `minSdk < 26` need `coreLibraryDesugaring` enabled.
+- No `iosX64` (Intel simulator) target: Compose Multiplatform 1.11 no longer publishes it.
 
 ## 0.2.0
 

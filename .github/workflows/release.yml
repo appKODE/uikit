@@ -10,7 +10,8 @@ permissions:
 
 jobs:
   publish-library:
-    runs-on: ubuntu-latest
+    # iOS klibs only build on macOS.
+    runs-on: macos-latest
     environment: release
     if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
     steps:

@@ -1,39 +1,48 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
+  alias(libs.plugins.kotlinMultiplatform)
+  alias(libs.plugins.androidKmpLibrary)
   alias(libs.plugins.kotlinCompose)
-  alias(libs.plugins.androidLibrary)
   alias(libs.plugins.vanniktech.maven.publish)
 }
 
-android {
-  namespace = "ru.kode.uikit.components.foundation"
-  compileSdk = 36
+kotlin {
+  jvmToolchain(17)
 
-  defaultConfig {
+  android {
+    namespace = "ru.kode.uikit.components.foundation"
+    compileSdk = 36
     minSdk = 21
-    aarMetadata {
-      minCompileSdk = 21
+  }
+  jvm()
+  iosArm64()
+  iosSimulatorArm64()
+  js { browser { testTask { enabled = false } } }
+
+  @OptIn(ExperimentalWasmDsl::class)
+  wasmJs { browser { testTask { enabled = false } } }
+
+  // Every non-Android target shares the plain sheet dialog (nonAndroidMain).
+  applyDefaultHierarchyTemplate {
+    common {
+      group("nonAndroid") {
+        withJvm()
+        withIos()
+        withJs()
+        withWasmJs()
+      }
     }
-    val versionName: String by project
-    version = versionName
   }
 
-  buildFeatures {
-    compose = true
+  sourceSets {
+    commonMain.dependencies {
+      api(project(":uikit-core"))
+      implementation(libs.cmp.material.ripple)
+      implementation(libs.androidx.annotation)
+    }
+    androidMain.dependencies {
+      implementation(libs.compose.material.ripple)
+    }
   }
-
-  compileOptions {
-    isCoreLibraryDesugaringEnabled = true
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-
-  kotlin {
-    jvmToolchain(17)
-  }
-}
-
-dependencies {
-  api(project(":uikit-core"))
-  implementation(libs.compose.material.ripple)
-  coreLibraryDesugaring(libs.android.jdk.desugar)
 }
