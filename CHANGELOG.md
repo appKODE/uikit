@@ -5,6 +5,38 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.4.0
+
+### Added
+- Kotlin Multiplatform: all three artifacts now publish for Android, iOS (`iosArm64`, `iosSimulatorArm64`),
+  JVM desktop, `js` and `wasmJs`. Android consumers keep the same coordinates; Gradle module metadata picks the
+  Android variant.
+- The Material3 backend uses androidx Material3 1.4.0 on Android (unchanged) and JetBrains Compose
+  Multiplatform Material3 on the other targets. The foundation backend is pure Compose Foundation everywhere.
+
+### Changed (breaking)
+- Dates are `kotlinx.datetime.LocalDate` instead of `java.time.LocalDate`: `rememberDatePickerState`,
+  `DatePickerState.selectedDate`, `onDateConfirm`, the `headline` slot and `UikitDatePickerDefaults.Headline`.
+- Android resource ids in the date picker configuration are replaced by composable lambdas:
+  `TextFieldDatePickerConfiguration.leadingIcon/trailingIcon/errorIcon`, `InlineDatePickerConfiguration.icon`
+  (`@Composable () -> Painter`) and `ModalDatePickerConfiguration.title/confirmButtonText/cancelButtonText`
+  (`@Composable () -> String`). Migration:
+  ```kotlin
+  // before
+  TextFieldDatePickerConfiguration(leadingIconRes = R.drawable.ic_calendar, /* … */)
+  ModalDatePickerConfiguration(titleRes = R.string.pick_date, /* … */)
+  rememberDatePickerState(initialSelectedDate = java.time.LocalDate.of(2026, 1, 15))
+  // after
+  TextFieldDatePickerConfiguration(leadingIcon = { painterResource(R.drawable.ic_calendar) }, /* … */)
+  ModalDatePickerConfiguration(title = { stringResource(R.string.pick_date) }, /* … */)
+  rememberDatePickerState(initialSelectedDate = kotlinx.datetime.LocalDate(2026, 1, 15))
+  ```
+
+### Notes
+- The libraries no longer enable core library desugaring themselves. kotlinx-datetime uses `java.time` on
+  Android, so apps with `minSdk < 26` need `coreLibraryDesugaring` enabled.
+- No `iosX64` (Intel simulator) target: Compose Multiplatform 1.11 no longer publishes it.
+
 ## 0.3.0
 
 ### Added

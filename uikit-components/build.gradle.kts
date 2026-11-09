@@ -1,39 +1,37 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
+  alias(libs.plugins.kotlinMultiplatform)
+  alias(libs.plugins.androidKmpLibrary)
   alias(libs.plugins.kotlinCompose)
-  alias(libs.plugins.androidLibrary)
   alias(libs.plugins.vanniktech.maven.publish)
 }
 
-android {
-  namespace = "ru.kode.uikit.components"
-  compileSdk = 36
+kotlin {
+  jvmToolchain(17)
 
-  defaultConfig {
+  android {
+    namespace = "ru.kode.uikit.components"
+    compileSdk = 36
     minSdk = 21
-    aarMetadata {
-      minCompileSdk = 21
+  }
+  jvm()
+  iosArm64()
+  iosSimulatorArm64()
+  js { browser { testTask { enabled = false } } }
+
+  @OptIn(ExperimentalWasmDsl::class)
+  wasmJs { browser { testTask { enabled = false } } }
+
+  sourceSets {
+    commonMain.dependencies {
+      api(project(":uikit-core"))
+      implementation(libs.cmp.material3)
+      implementation(libs.androidx.annotation)
     }
-    val versionName: String by project
-    version = versionName
+    androidMain.dependencies {
+      // CMP material3 already resolves to androidx material3 on Android; pin it explicitly.
+      implementation(libs.compose.material3)
+    }
   }
-
-  buildFeatures {
-    compose = true
-  }
-
-  compileOptions {
-    isCoreLibraryDesugaringEnabled = true
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-
-  kotlin {
-    jvmToolchain(17)
-  }
-}
-
-dependencies {
-  api(project(":uikit-core"))
-  implementation(libs.compose.material3)
-  coreLibraryDesugaring(libs.android.jdk.desugar)
 }

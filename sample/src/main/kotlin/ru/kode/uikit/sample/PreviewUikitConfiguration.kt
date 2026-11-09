@@ -5,6 +5,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpSize
@@ -211,9 +213,9 @@ private fun previewSliderConfiguration() = SliderConfiguration(
 
 private fun previewDatePickerConfiguration() = DatePickerConfiguration(
   textField = TextFieldDatePickerConfiguration(
-    leadingIconRes = android.R.drawable.ic_menu_my_calendar,
-    trailingIconRes = android.R.drawable.arrow_down_float,
-    errorIconRes = android.R.drawable.ic_dialog_alert,
+    leadingIcon = { painterResource(android.R.drawable.ic_menu_my_calendar) },
+    trailingIcon = { painterResource(android.R.drawable.arrow_down_float) },
+    errorIcon = { painterResource(android.R.drawable.ic_dialog_alert) },
     shape = PreviewTokens.fieldShape,
     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp),
     textStyle = PreviewTokens.bodyStyle,
@@ -241,7 +243,7 @@ private fun previewDatePickerConfiguration() = DatePickerConfiguration(
     disabledTrailingIconColor = PreviewTokens.disabled,
   ),
   inline = InlineDatePickerConfiguration(
-    iconRes = android.R.drawable.ic_menu_my_calendar,
+    icon = { painterResource(android.R.drawable.ic_menu_my_calendar) },
     textStyle = PreviewTokens.bodyStyle,
     textColor = PreviewTokens.onSurface,
     disabledTextColor = PreviewTokens.disabled,
@@ -249,9 +251,9 @@ private fun previewDatePickerConfiguration() = DatePickerConfiguration(
     disabledIconColor = PreviewTokens.disabled,
   ),
   modal = ModalDatePickerConfiguration(
-    titleRes = android.R.string.untitled,
-    confirmButtonTextRes = android.R.string.ok,
-    cancelButtonTextRes = android.R.string.cancel,
+    title = { stringResource(android.R.string.untitled) },
+    confirmButtonText = { stringResource(android.R.string.ok) },
+    cancelButtonText = { stringResource(android.R.string.cancel) },
     bottomButtonsTextStyle = PreviewTokens.labelStyle,
     containerColor = PreviewTokens.surface,
     titleContentColor = PreviewTokens.onSurfaceVariant,

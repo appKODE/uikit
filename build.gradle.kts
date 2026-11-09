@@ -1,10 +1,9 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   alias(libs.plugins.kotlinCompose) apply false
-  alias(libs.plugins.androidLibrary) apply false
+  alias(libs.plugins.kotlinMultiplatform) apply false
+  alias(libs.plugins.androidKmpLibrary) apply false
   alias(libs.plugins.androidApplication) apply false
   alias(libs.plugins.ksp) apply false
   alias(libs.plugins.vanniktech.maven.publish) apply false
@@ -55,12 +54,6 @@ spotless {
 }
 
 subprojects {
-  tasks.withType<KotlinCompile> {
-    compilerOptions {
-      jvmTarget.set(JvmTarget.JVM_17)
-    }
-  }
-
   pluginManager.withPlugin("com.vanniktech.maven.publish") {
     configure<MavenPublishBaseExtension> {
       publishToMavenCentral()

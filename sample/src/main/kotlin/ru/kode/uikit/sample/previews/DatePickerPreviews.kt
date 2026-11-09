@@ -6,15 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.android.showkase.annotation.ShowkaseComposable
+import kotlinx.datetime.LocalDate
 import ru.kode.uikit.components.TextFieldDatePicker
 import ru.kode.uikit.components.rememberDatePickerState
 import ru.kode.uikit.sample.PreviewTheme
-import java.time.LocalDate
 
 private const val GROUP = "Date"
 
 // Fixed date keeps screenshots stable across days.
-internal val PreviewDate: LocalDate = LocalDate.of(2026, 1, 15)
+internal val PreviewDate: LocalDate = LocalDate(2026, 1, 15)
 
 @ShowkaseComposable(name = "TextFieldDatePicker — states", group = GROUP)
 @Preview
