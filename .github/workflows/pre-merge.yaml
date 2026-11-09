@@ -28,6 +28,14 @@ jobs:
       - name: Check formatting and assemble
         run: ./gradlew spotlessCheck :uikit-core:assembleRelease :uikit-components:assembleRelease :uikit-components-foundation:assembleRelease --continue
 
+      # Both flavors compare against the same goldens in sample/src/test/snapshots.
+      - name: Verify screenshots (Material3 backend)
+        run: ./gradlew :sample:verifyRoborazziMaterial3Debug
+
+      - name: Verify screenshots (foundation backend)
+        if: always()
+        run: ./gradlew :sample:verifyRoborazziFoundationDebug
+
       - name: Upload Gradle Reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -35,4 +43,5 @@ jobs:
           name: test-reports
           path: |
             **/build/reports/
+            sample/build/outputs/roborazzi/
           if-no-files-found: warn
