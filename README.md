@@ -39,8 +39,8 @@ Both backends expose the same API in `ru.kode.uikit.components`, so switching is
 Depend on exactly one: adding both fails the build with duplicate classes. `uikit-core` comes in transitively.
 
 Pick `uikit-components` if your app already uses Material3, or you need Material3's exact look.
-Pick `uikit-components-foundation` to keep Material3 out of your APK. It doesn't yet match the Material3
-backend pixel for pixel; see the CHANGELOG's known issues.
+Pick `uikit-components-foundation` to keep Material3 out of your APK. It renders the same as the Material3
+backend (CI checks both against the same screenshots); see the CHANGELOG for the few known differences.
 
 To change one visual part without forking, override its slot. Slots work the same on both backends:
 ```kotlin
@@ -48,8 +48,9 @@ Checkbox(checked = checked, onClick = onClick, box = { state -> MyCheckboxBox(st
 ModalBottomSheet(onDismissRequest = onDismiss, dragHandle = null) { /* content */ }
 ```
 Available slots: `Checkbox.box`, `RadioButton.indicator`, the sliders' `thumb`/`track`,
-`Button.loadingIndicator` and `ModalBottomSheet.dragHandle`. Their defaults are in
-`UikitCheckboxDefaults`, `UikitRadioButtonDefaults`, `UikitButtonDefaults` and `UikitBottomSheetDefaults`.
+`Button.loadingIndicator`, `ModalBottomSheet.dragHandle` and `TextFieldDatePicker.title`/`headline`. Their
+defaults are in `UikitCheckboxDefaults`, `UikitRadioButtonDefaults`, `UikitButtonDefaults`,
+`UikitBottomSheetDefaults` and `UikitDatePickerDefaults`.
 
 ## Components
 - Button
@@ -101,9 +102,6 @@ The workflow runs `./gradlew publishAndReleaseToMavenCentral`. It requires the f
 `SIGNING_PASSWORD`, `SIGNING_SECRET_KEY_RING_FILE_BASE64`.
 
 To verify the artifact build locally: `./gradlew publishToMavenLocal`.
-
-All components are built purely on Compose Foundation — the library has no dependency on Material or
-Material3.
 
 See [CHANGELOG.md](CHANGELOG.md) for the release history.
 

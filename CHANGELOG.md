@@ -17,9 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Adding both backends fails the build with duplicate classes.
 - Slots for overriding a component's visual part on either backend:
   `Checkbox(box = { state: CheckboxSlotState -> … })`, `RadioButton(indicator = { state: RadioButtonSlotState -> … })`,
-  `Button(loadingIndicator = { … })`, `ModalBottomSheet(dragHandle = { … } or null)`.
-  Defaults live in `UikitCheckboxDefaults`, `UikitRadioButtonDefaults`, `UikitButtonDefaults` and
-  `UikitBottomSheetDefaults`.
+  `Button(loadingIndicator = { … })`, `ModalBottomSheet(dragHandle = { … } or null)`,
+  `TextFieldDatePicker(title = { configuration -> … }, headline = { date -> … })`.
+  Defaults live in `UikitCheckboxDefaults`, `UikitRadioButtonDefaults`, `UikitButtonDefaults`,
+  `UikitBottomSheetDefaults` and `UikitDatePickerDefaults.Title` / `.Headline`.
+- Both backends render pixel-identically; CI verifies each against the same screenshot goldens.
 
 ### Changed (breaking)
 - `Slider`: the `thumb`/`track`/`startThumb`/`endThumb` slot lambdas now receive the library's own
@@ -31,9 +33,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - `ModalBottomSheet(showHandle = …)`: use `dragHandle` (`null` hides the handle).
 
-### Known issues
-- The foundation backend does not yet render pixel-identically to the Material3 one for Checkbox,
-  RadioButton, Button (loading spinner), the sliders, DatePicker and the ModalBottomSheet scrim.
+### Known differences
+- The foundation `ModalBottomSheet` does not provide Material3's `LocalContentColor`, so Material3 `Text` without
+  an explicit color renders black inside it.
+- The foundation sliders size the thumb gap from `SliderConfiguration`, not from a custom `thumb` slot, and draw
+  no step ticks (the Material3 backend draws none with the current configuration either).
 
 ## 0.2.0
 

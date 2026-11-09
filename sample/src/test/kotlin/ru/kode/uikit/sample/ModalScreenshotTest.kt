@@ -1,5 +1,6 @@
 package ru.kode.uikit.sample
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
@@ -29,7 +30,8 @@ class ModalScreenshotTest {
     compose.setContent {
       PreviewTheme {
         ModalBottomSheet(onDismissRequest = {}) {
-          repeat(5) { Text("Bottom sheet row ${it + 1}") }
+          // Explicit color: only the M3 sheet provides M3 LocalContentColor, the foundation one cannot.
+          repeat(5) { Text("Bottom sheet row ${it + 1}", color = MaterialTheme.colorScheme.onSurface) }
         }
       }
     }
