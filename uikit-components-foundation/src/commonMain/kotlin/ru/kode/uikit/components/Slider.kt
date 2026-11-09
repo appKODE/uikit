@@ -323,7 +323,7 @@ private fun DrawScope.drawTrack(
   activeColor: Color,
   inactiveColor: Color,
 ) {
-  // ponytail: the gap uses the configured thumb width, not the measured one, so a custom thumb slot of another
+  // The gap uses the configured thumb width, not the measured one, so a custom thumb slot of another
   // width gets a mismatched gap. Pass measured widths down from SliderLayout if that matters.
   val thumbWidth = configuration.thumbSize.width.roundToPx()
   val gap = if (configuration.thumbTrackGapSize > 0.dp) {
@@ -356,7 +356,7 @@ private fun DrawScope.drawTrack(
   if (activeEnd - activeStart > startCorner) {
     drawTrackPath(activeStart, activeEnd, activeColor, startCorner, insideCorner)
   }
-  // ponytail: no step ticks, SliderConfiguration has no tick colors (the M3 backend passes Unspecified).
+  // No step ticks, SliderConfiguration has no tick colors (the M3 backend passes Unspecified).
 }
 
 private fun DrawScope.drawTrackPath(start: Float, end: Float, color: Color, startCorner: Float, endCorner: Float) {
