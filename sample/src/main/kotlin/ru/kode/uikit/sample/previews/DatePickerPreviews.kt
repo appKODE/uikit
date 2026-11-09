@@ -9,8 +9,12 @@ import com.airbnb.android.showkase.annotation.ShowkaseComposable
 import ru.kode.uikit.components.TextFieldDatePicker
 import ru.kode.uikit.components.rememberDatePickerState
 import ru.kode.uikit.sample.PreviewTheme
+import java.time.LocalDate
 
 private const val GROUP = "Date"
+
+// Fixed date keeps screenshots stable across days.
+internal val PreviewDate: LocalDate = LocalDate.of(2026, 1, 15)
 
 @ShowkaseComposable(name = "TextFieldDatePicker — states", group = GROUP)
 @Preview
@@ -19,20 +23,20 @@ fun TextFieldDatePickerPreview() {
   PreviewTheme {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
       TextFieldDatePicker(
-        state = rememberDatePickerState(),
+        state = rememberDatePickerState(initialSelectedDate = PreviewDate),
         onDateConfirm = {},
         label = "Birth date",
         helper = "Tap to choose",
       )
       TextFieldDatePicker(
-        state = rememberDatePickerState(),
+        state = rememberDatePickerState(initialSelectedDate = PreviewDate),
         onDateConfirm = {},
         label = "Birth date",
         helper = "Required field",
         error = true,
       )
       TextFieldDatePicker(
-        state = rememberDatePickerState(),
+        state = rememberDatePickerState(initialSelectedDate = PreviewDate),
         onDateConfirm = {},
         label = "Birth date",
         enabled = false,

@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.kotlinCompose)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -15,6 +16,10 @@ android {
     targetSdk = 36
     versionCode = 1
     versionName = "1.0"
+  }
+
+  testOptions {
+    unitTests.isIncludeAndroidResources = true
   }
 
   buildFeatures {
@@ -42,4 +47,13 @@ dependencies {
   ksp(libs.showkase.processor)
 
   coreLibraryDesugaring(libs.android.jdk.desugar)
+
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.roborazzi)
+  testImplementation(libs.roborazzi.compose)
+  testImplementation(libs.roborazzi.junit.rule)
+  testImplementation(libs.composable.preview.scanner)
+  testImplementation(libs.compose.ui.test.junit4)
+  debugImplementation(libs.compose.ui.test.manifest)
 }
