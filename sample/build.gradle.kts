@@ -18,6 +18,14 @@ android {
     versionName = "1.0"
   }
 
+  // One sample per backend; both read/write the same goldens in src/test/snapshots, so
+  // verifyRoborazziFoundationDebug checks foundation against goldens recorded on material3.
+  flavorDimensions += "backend"
+  productFlavors {
+    create("material3") { dimension = "backend" }
+    create("foundation") { dimension = "backend" }
+  }
+
   testOptions {
     unitTests.isIncludeAndroidResources = true
   }
@@ -38,9 +46,10 @@ android {
 }
 
 dependencies {
-  implementation(project(":uikit-components"))
+  "material3Implementation"(project(":uikit-components"))
+  "foundationImplementation"(project(":uikit-components-foundation"))
   implementation(libs.bundles.compose)
-  // The library dropped M3; the sample still uses it for its own theme/scaffolding and previews.
+  // The foundation backend has no M3; the sample still uses it for its own theme/scaffolding and previews.
   implementation(libs.compose.material3)
   implementation(libs.compose.tooling)
   implementation(libs.androidx.activity.compose)

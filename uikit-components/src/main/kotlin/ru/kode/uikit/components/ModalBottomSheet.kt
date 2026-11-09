@@ -1,188 +1,73 @@
 package ru.kode.uikit.components
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import kotlinx.coroutines.launch
 import ru.kode.uikit.components.configuration.LocalUikitConfiguration
-import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalBottomSheet(
   onDismissRequest: () -> Unit,
   modifier: Modifier = Modifier,
   configuration: (BottomSheetConfiguration) -> BottomSheetConfiguration = { it },
-  showHandle: Boolean = true,
+  dragHandle: (@Composable () -> Unit)? = {
+    UikitBottomSheetDefaults.DragHandle(
+      configuration(LocalUikitConfiguration.current.bottomSheetConfiguration).handleConfiguration,
+    )
+  },
   sheetContent: @Composable ColumnScope.() -> Unit,
 ) {
   val configurationInternal by rememberUpdatedState(
     configuration(LocalUikitConfiguration.current.bottomSheetConfiguration),
   )
-  val scope = rememberCoroutineScope()
-  // Vertical translation of the sheet: 0 = fully expanded, +height = hidden below the screen.
-  val offsetY = remember { Animatable(0f) }
-  var sheetHeight by remember { mutableFloatStateOf(0f) }
-  var revealed by remember { mutableStateOf(false) }
-
-  Dialog(
-    onDismissRequest = onDismissRequest,
-    properties = DialogProperties(
-      usePlatformDefaultWidth = false,
-      dismissOnClickOutside = false,
-      decorFitsSystemWindows = false,
-    ),
-  ) {
-    val scrimFraction = if (sheetHeight > 0f) (1f - offsetY.value / sheetHeight).coerceIn(0f, 1f) else 0f
-    Box(modifier.fillMaxSize()) {
-      Box(
-        Modifier
-          .fillMaxSize()
-          .background(
-            configurationInternal.scrimColor.copy(
-              alpha =
-              configurationInternal.scrimColor.alpha * scrimFraction,
-            ),
-          )
-          .clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-          ) {
-            scope.launch {
-              offsetY.animateTo(sheetHeight, tween(ANIMATION_DURATION_MILLIS))
-              onDismissRequest()
-            }
-          },
-      )
-      Column(
-        Modifier
-          .align(Alignment.BottomCenter)
-          .fillMaxWidth()
-          .widthIn(max = configurationInternal.sheetMaxWidth)
-          .offset { IntOffset(0, offsetY.value.roundToInt()) }
-          .onSizeChanged {
-            sheetHeight = it.height.toFloat()
-            if (!revealed) {
-              revealed = true
-              scope.launch {
-                offsetY.snapTo(it.height.toFloat())
-                offsetY.animateTo(0f, tween(ANIMATION_DURATION_MILLIS))
-              }
-            }
-          }
-          .draggable(
-            orientation = Orientation.Vertical,
-            state = rememberDraggableState { delta ->
-              scope.launch { offsetY.snapTo((offsetY.value + delta).coerceAtLeast(0f)) }
-            },
-            onDragStopped = { velocity ->
-              val shouldDismiss = offsetY.value > sheetHeight * DISMISS_POSITION_FRACTION ||
-                velocity > DISMISS_VELOCITY_THRESHOLD
-              if (shouldDismiss) {
-                offsetY.animateTo(sheetHeight, tween(ANIMATION_DURATION_MILLIS))
-                onDismissRequest()
-              } else {
-                offsetY.animateTo(0f, tween(ANIMATION_DURATION_MILLIS))
-              }
-            },
-          )
-          .clip(
-            RoundedCornerShape(
-              topStart = configurationInternal.cornerRadius,
-              topEnd = configurationInternal.cornerRadius,
-            ),
-          )
-          .background(configurationInternal.backgroundColor),
-      ) {
-        if (showHandle) {
-          BottomSheetHandle(
-            configuration = configurationInternal.handleConfiguration,
-            modifier = Modifier.fillMaxWidth(),
-          )
-        }
-        sheetContent()
-        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
-      }
-    }
-  }
-}
-
-@Composable
-private fun BottomSheetHandle(
-  configuration: BottomSheetConfiguration.HandleConfiguration,
-  modifier: Modifier = Modifier,
-) {
-  Box(
+  val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+  androidx.compose.material3.ModalBottomSheet(
     modifier = modifier,
-    contentAlignment = Alignment.Center,
-  ) {
-    Spacer(
-      modifier = Modifier
-        .padding(vertical = configuration.verticalPadding)
-        .size(width = configuration.width, height = configuration.height)
-        .background(
-          color = configuration.color,
-          shape = configuration.shape,
-        ),
-    )
-  }
+    containerColor = configurationInternal.backgroundColor,
+    scrimColor = configurationInternal.scrimColor,
+    sheetMaxWidth = configurationInternal.sheetMaxWidth,
+    shape = RoundedCornerShape(
+      topStart = configurationInternal.cornerRadius,
+      topEnd = configurationInternal.cornerRadius,
+    ),
+    dragHandle = dragHandle,
+    sheetState = sheetState,
+    onDismissRequest = onDismissRequest,
+    contentWindowInsets = { WindowInsets.navigationBars },
+    content = sheetContent,
+  )
 }
 
-private const val ANIMATION_DURATION_MILLIS = 300
-private const val DISMISS_POSITION_FRACTION = 0.5f
-private const val DISMISS_VELOCITY_THRESHOLD = 1000f
-
-@Immutable
-data class BottomSheetConfiguration(
-  val backgroundColor: Color,
-  val scrimColor: Color,
-  val sheetMaxWidth: Dp,
-  val cornerRadius: Dp,
-  val handleConfiguration: HandleConfiguration,
+@Deprecated("Use the dragHandle slot; pass null to hide the handle.")
+@Composable
+fun ModalBottomSheet(
+  onDismissRequest: () -> Unit,
+  modifier: Modifier = Modifier,
+  configuration: (BottomSheetConfiguration) -> BottomSheetConfiguration = { it },
+  showHandle: Boolean,
+  sheetContent: @Composable ColumnScope.() -> Unit,
 ) {
-  @Immutable
-  data class HandleConfiguration(
-    val color: Color,
-    val width: Dp,
-    val height: Dp,
-    val verticalPadding: Dp,
-    val shape: Shape,
+  ModalBottomSheet(
+    onDismissRequest = onDismissRequest,
+    modifier = modifier,
+    configuration = configuration,
+    dragHandle = if (showHandle) {
+      {
+        UikitBottomSheetDefaults.DragHandle(
+          configuration(LocalUikitConfiguration.current.bottomSheetConfiguration).handleConfiguration,
+        )
+      }
+    } else {
+      null
+    },
+    sheetContent = sheetContent,
   )
 }

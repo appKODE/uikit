@@ -32,53 +32,8 @@ android {
   }
 }
 
-mavenPublishing {
-  publishToMavenCentral()
-  signAllPublications()
-
-  val versionName: String by project
-  val pomGroupId: String by project
-  coordinates(pomGroupId, "uikit-components", versionName)
-
-  pom {
-    val pomDescription: String by project
-    val pomUrl: String by project
-    val pomName: String by project
-    name.set(pomName)
-    description.set(pomDescription)
-    url.set(pomUrl)
-    scm {
-      val pomScmUrl: String by project
-      val pomScmConnection: String by project
-      val pomScmDevConnection: String by project
-      url.set(pomScmUrl)
-      connection.set(pomScmConnection)
-      developerConnection.set(pomScmDevConnection)
-    }
-    licenses {
-      license {
-        val pomLicenseName: String by project
-        val pomLicenseUrl: String by project
-        val pomLicenseDist: String by project
-        name.set(pomLicenseName)
-        url.set(pomLicenseUrl)
-        distribution.set(pomLicenseDist)
-      }
-    }
-    developers {
-      developer {
-        val pomDeveloperId: String by project
-        val pomDeveloperName: String by project
-        id.set(pomDeveloperId)
-        name.set(pomDeveloperName)
-      }
-    }
-  }
-}
-
 dependencies {
-  implementation(libs.coroutines.android)
-  implementation(libs.bundles.compose)
-  debugImplementation(libs.compose.tooling)
+  api(project(":uikit-core"))
+  implementation(libs.compose.material3)
   coreLibraryDesugaring(libs.android.jdk.desugar)
 }

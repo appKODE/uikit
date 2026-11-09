@@ -26,7 +26,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Check formatting and assemble
-        run: ./gradlew spotlessCheck :uikit-components:assembleRelease --continue
+        run: ./gradlew spotlessCheck :uikit-core:assembleRelease :uikit-components:assembleRelease :uikit-components-foundation:assembleRelease --continue
 
       - name: Upload Gradle Reports
         if: always()

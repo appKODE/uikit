@@ -1,25 +1,20 @@
 package ru.kode.uikit.components
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.RadioButtonColors
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import ru.kode.uikit.components.configuration.LocalUikitConfiguration
-import ru.kode.uikit.components.internal.uikitRipple
 
 @Composable
 fun RadioButton(
@@ -29,20 +24,9 @@ fun RadioButton(
   enabled: Boolean = true,
   error: Boolean = false,
   configuration: (RadioButtonConfiguration) -> RadioButtonConfiguration = { it },
+  indicator: @Composable (RadioButtonSlotState) -> Unit = { UikitRadioButtonDefaults.Indicator(it) },
 ) {
-  val config by rememberUpdatedState(configuration(LocalUikitConfiguration.current.radioButton))
-  val ringColor = when {
-    !enabled -> if (selected) config.disabledSelectedColor else config.disabledUnselectedColor
-    selected -> if (error) config.errorSelectedColor else config.selectedColor
-    else -> if (error) config.errorUnselectedColor else config.unselectedColor
-  }
-  val dotColor = when {
-    !enabled -> config.disabledSelectedColor
-    error -> config.errorSelectedColor
-    else -> config.selectedColor
-  }
-  val dotFraction by animateFloatAsState(if (selected) 1f else 0f, label = "radio-dot")
-
+  val configurationInternal by rememberUpdatedState(configuration(LocalUikitConfiguration.current.radioButton))
   val selectableModifier = if (onClick != null) {
     Modifier.selectable(
       selected = selected,
@@ -50,38 +34,56 @@ fun RadioButton(
       enabled = enabled,
       role = Role.RadioButton,
       interactionSource = remember { MutableInteractionSource() },
-      indication = uikitRipple(bounded = false, color = ringColor, radius = config.size / 2),
+      indication = ripple(bounded = false),
     )
   } else {
     Modifier
   }
-
-  Canvas(
+  Box(
     modifier = modifier
-      .then(selectableModifier)
-      .padding(config.contentPadding)
-      .size(config.size),
+      .padding(configurationInternal.contentPadding)
+      .size(configurationInternal.size)
+      .then(selectableModifier),
+    contentAlignment = Alignment.Center,
   ) {
-    val stroke = RadioStrokeWidth.toPx()
-    val outerRadius = (size.minDimension - stroke) / 2f
-    drawCircle(color = ringColor, radius = outerRadius, style = Stroke(width = stroke))
-    if (dotFraction > 0f) {
-      drawCircle(color = dotColor, radius = size.minDimension * MAX_DOT_RADIUS_FRACTION * dotFraction)
-    }
+    indicator(
+      RadioButtonSlotState(
+        selected = selected,
+        enabled = enabled,
+        error = error,
+        configuration = configurationInternal,
+      ),
+    )
   }
 }
 
-private val RadioStrokeWidth = 2.dp
-private const val MAX_DOT_RADIUS_FRACTION = 0.25f
-
-@Immutable
-data class RadioButtonConfiguration(
-  val size: Dp,
-  val contentPadding: PaddingValues,
-  val selectedColor: Color,
-  val unselectedColor: Color,
-  val errorSelectedColor: Color,
-  val errorUnselectedColor: Color,
-  val disabledSelectedColor: Color,
-  val disabledUnselectedColor: Color,
-)
+object UikitRadioButtonDefaults {
+  /** Default `indicator` slot: the Material 3 radio button drawn with [RadioButtonConfiguration] colors. */
+  @Composable
+  fun Indicator(state: RadioButtonSlotState) {
+    val configurationInternal = state.configuration
+    val error = state.error
+    val colors = remember(configurationInternal, error) {
+      RadioButtonColors(
+        selectedColor = if (error) {
+          configurationInternal.errorSelectedColor
+        } else {
+          configurationInternal.selectedColor
+        },
+        unselectedColor = if (error) {
+          configurationInternal.errorUnselectedColor
+        } else {
+          configurationInternal.unselectedColor
+        },
+        disabledSelectedColor = configurationInternal.disabledSelectedColor,
+        disabledUnselectedColor = configurationInternal.disabledUnselectedColor,
+      )
+    }
+    androidx.compose.material3.RadioButton(
+      selected = state.selected,
+      onClick = null,
+      enabled = state.enabled,
+      colors = colors,
+    )
+  }
+}
